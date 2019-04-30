@@ -11,6 +11,10 @@ App({
           api.wxLogin('/weixin/exchange', 'POST', data).then(res => {
             console.log('app-success:', res.data);
             if (res.data.rlt_code == 'S_0000') {
+              // wx.showToast({
+              //   title: res.data.data.open_id,
+              //   icon: 'none'
+              // })
               wx.showModal({
                 title: 'openid',
                 showCancel: false,
