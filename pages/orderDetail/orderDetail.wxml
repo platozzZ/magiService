@@ -1,0 +1,38 @@
+<view class="container">
+  <scroll-view class='scroll' scroll-y>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view>订单编号:</view>
+        <view>{{art.id}}</view>
+      </view>
+      <view class="weui-cell">
+        <view>保洁房间:</view>
+        <view>{{art.address}}</view>
+      </view>
+      <view class="weui-cell">
+        <view>房源类型:</view>
+        <view>{{art.house_type}}</view>
+      </view>
+      <view class="weui-cell">
+        <view>服务类型:</view>
+        <view>{{art.service_type}}</view>
+      </view>
+      <view class="weui-cell">
+        <view>服务时间:</view>
+        <view>{{art.service_time}}</view>
+      </view>
+      <view class="weui-cell">
+        <view>订单金额:</view>
+        <view>{{art.amount}}元</view>
+      </view>
+      <view class="weui-cell">
+        <view>支付状态:</view>
+        <view>{{art.status}}</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view>
+    <button class="weui-btn callMe" bindtap='contactUs' data-phone='18911262211'>联系客服</button>
+  </view>
+</view>

@@ -1,0 +1,32 @@
+page{
+  display:flex;
+  display:-webkit-flex;
+  height:100%;
+  width:100%;
+}
+.weui-form-preview__label,.weui-form-preview__value_in-hd{
+  font-size: 32rpx;
+}
+.weui-form-preview__label{
+  color: #353535;
+}
+.weui-form-preview__value_in-hd{
+  color: #8a8a8a;
+}
+
+.weui-form-preview__hd .weui-form-preview__item{
+  line-height: 46rpx;
+}
+.weui-form-preview__ft{
+  text-align: right;
+  display: block;
+  padding: 20rpx 15px;
+  line-height: 46rpx;
+  font-size: 32rpx;
+}
+.weui-form-preview{
+  margin-bottom: 30rpx;
+}
+.weui-form-preview.weui-cell_active {
+  background-color:#ececec;
+}

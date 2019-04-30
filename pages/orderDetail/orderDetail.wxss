@@ -1,0 +1,27 @@
+page {
+  display: flex;
+  display: -webkit-flex;
+  height: 100%;
+  width: 100%;
+}
+.weui-cell{
+  font-size: 36rpx;
+}
+.weui-cell view+view{
+  padding-left: 30rpx;
+}
+.callMe{
+  width: 80%;
+  margin-bottom: 40rpx;
+}
+.callMe.weui-btn{
+  background: #014099;
+  color: #fff;
+  line-height: 90rpx;
+  font-size: 38rpx;
+}
+.callMe.button-hover {
+  color:rgba(255, 255, 255, 0.6);
+  background-color:rgba(1, 64, 153, .9);
+
+}

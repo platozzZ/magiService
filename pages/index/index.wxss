@@ -1,0 +1,61 @@
+page{
+  display:flex;
+  display:-webkit-flex;
+  height:100%;
+  width:100%;
+}
+.bgImages{
+  position: fixed;
+  top: 50%;
+  left: 0;
+  margin-top: -50%;
+  width: 100%;
+  z-index: -1;
+  opacity: 0.8
+}
+.weui-panel{
+  background: rgba(255,255,255,.5);
+  opacity: 
+}
+.weui-cells{
+  font-size: 34rpx;
+  background: rgba(255,255,255,.5)
+}
+.weui-cell{
+  padding: 15px;
+}
+.addButton{
+  position: fixed;
+  right: 0;
+  bottom: 120px;
+  width: 50px;
+  height: 50px;
+  background: #014099;
+  font-size: 14px;
+  line-height: 50px;
+  box-shadow: 0 0 20rpx #014099;
+  border-radius: 50%;
+  color: #fff;
+  z-index: 99999;
+}
+.view{
+  padding: 5px;
+}
+.inline{
+  line-height: 20px;
+  text-align: center;
+  width: 100%;
+  vertical-align:middle;
+}
+.weui-cell__ft_in-access{
+  color: #014099;
+}
+
+
+/* .van-cell__title{
+  flex: 1 0 auto;
+} */
+/* .scroll .van-cell .van-cell__value{
+  flex: 0 0 100rpx;
+  color: #014099;
+} */

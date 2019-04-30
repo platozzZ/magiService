@@ -1,0 +1,7 @@
+<!-- <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">微信一键登录</button>
+<picker mode="multiSelector" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
+    <input value='{{time}}' placeholder='选择时间'/>
+  </picker> -->
+<scroll-view class='scroll' scroll-y lower-threshold="50" bindscrolltolower="scrollLoading">
+  <view style='height: 2000rpx;'></view>
+</scroll-view>
