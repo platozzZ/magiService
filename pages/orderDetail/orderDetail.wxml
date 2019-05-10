@@ -1,4 +1,5 @@
-<view class="container">
+<navbar title="订单详情" back home='false'></navbar>
+<view class="container" style="top: {{containerTop}}px; height: {{containerHeight}}px">
   <scroll-view class='scroll' scroll-y>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell">
@@ -11,28 +12,52 @@
       </view>
       <view class="weui-cell">
         <view>房源类型:</view>
-        <view>{{art.house_type}}</view>
+        <view>{{art.houseType}}</view>
       </view>
       <view class="weui-cell">
         <view>服务类型:</view>
-        <view>{{art.service_type}}</view>
+        <view>{{art.serviceType}}</view>
       </view>
       <view class="weui-cell">
         <view>服务时间:</view>
-        <view>{{art.service_time}}</view>
+        <view>{{art.service_date}} {{art.service_time}}</view>
       </view>
       <view class="weui-cell">
         <view>订单金额:</view>
         <view>{{art.amount}}元</view>
       </view>
       <view class="weui-cell">
-        <view>支付状态:</view>
+        <view>订单状态:</view>
         <view>{{art.status}}</view>
+      </view>
+      <view class="weui-cell">
+        <view>布草清洗方式:</view>
+        <view>{{art.cleanType}}</view>
+      </view>
+      <view class="weui-cell" wx:if="{{art.hl_clean_type == '1'}}">
+        <view>领用地点:</view>
+        <view>{{art.hl_location}}</view>
+      </view>
+      <view class="weui-cell">
+        <view>保洁开门形式:</view>
+        <view>{{art.doorType}}/{{art.open_door_remark}}</view>
+      </view>
+      <!-- <view class="weui-cell">
+        <view>{{art.doorTitle}}:</view>
+        <view>{{art.open_door_remark}}</view>
+      </view> -->
+      <view class="weui-cell">
+        <view>消耗品的位置:</view>
+        <view>{{art.consumables_location}}</view>
+      </view>
+      <view class="weui-cell">
+        <view>订单备注:</view>
+        <view>{{art.remark? art.remark : '无'}}</view>
       </view>
     </view>
   </scroll-view>
 
-  <view>
-    <button class="weui-btn callMe" bindtap='contactUs' data-phone='18911262211'>联系客服</button>
+  <view class='btn-container'>
+    <button class="weui-btn callMe" bindtap='contactUs' data-phone='15611185767'>联系客服</button>
   </view>
 </view>

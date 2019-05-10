@@ -5,14 +5,21 @@ page {
   width: 100%;
 }
 .weui-cell{
-  font-size: 36rpx;
+  font-size: 32rpx;
+}
+.weui-cell view:first-child{
+  /* width: 160rpx; */
 }
 .weui-cell view+view{
   padding-left: 30rpx;
+  flex: 1;
+}
+.btn-container{
+  padding: 10px 0
 }
 .callMe{
   width: 80%;
-  margin-bottom: 40rpx;
+  margin: 0 auto;
 }
 .callMe.weui-btn{
   background: #014099;

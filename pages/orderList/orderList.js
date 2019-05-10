@@ -8,15 +8,29 @@ Page({
       current_page: 1,
       page_size: 20
     },
-    total_page: ''
+    total_page: '',
+    refresh: false,
+    showHome: false,
+    containerTop: app.globalData.navigationBarHeight,
+    containerHeight: app.globalData.containerHeight
   },
   onLoad: function (options) {
     let that = this
+    console.log(options)
+    if (options.showHome == 'false'){
+      that.setData({
+        showHome: false
+      })
+    } else {
+      that.setData({
+        showHome: true
+      })
+    }
     setTimeout(function () {
       that.getOrderList()
     }, 1000)
   },
-  getOrderList(){
+  getOrderList(e){
     wx.showLoading({
       title: '',
     })
@@ -25,28 +39,43 @@ Page({
     console.log(data)
     api.request('/fuwu/order/list.do', 'POST', app.globalData.token, data).then(res => {
       wx.hideLoading()
-      let data = res.data.data.rows
-      console.log('getOrderList:', res.data);
-      let art = that.data.art.concat(data)
-      art.map(function (item) {
-        item.service_time = util.formatAllTime(new Date(item.service_time))
-        if (item.order_status == 0 && item.pay_status == 0){
-          item.status = '已完成'
-        } else if (item.order_status == 1 && item.pay_status == 0){
-          item.status = '已预约'
-        } else if (item.order_status == 1 && item.pay_status == 1){
-          item.status = '未支付'
-        }
-        return item
-      });
       if (res.data.rlt_code == 'S_0000') {
-        that.setData({
-          art: art,
-          total_page: res.data.data.total_page
-        })
+        let data = res.data.data.rows
+        console.log(data)
+        if(!!data){
+          // console.log(data)
+          // console.log('getOrderList:', res.data);
+          let art
+          if (e == 'loadMore') {
+            art = that.data.art.concat(data)
+          } else {
+            art = data
+          }
+          art.map(function (item) {
+            // item.service_time = util.formatAllTime(new Date(item.service_time))
+            if (item.order_status == 0 && item.pay_status == 0) {
+              item.status = '已完成'
+            } else if (item.order_status == 1 && item.pay_status == 0) {
+              item.status = '已预约'
+            } else if (item.order_status == 1 && item.pay_status == 1) {
+              item.status = '未支付'
+            }
+            return item
+          });
+          that.setData({
+            art: art,
+            total_page: res.data.data.total_page
+          })
+        } else {
+          wx.showToast({
+            title: '暂无更多数据',
+            icon: 'none'
+          })
+        }
       } else {
         wx.showToast({
-          title: '暂无更多数据',
+          title: res.rlt_msg,
+          icon: 'none'
         })
       }
     }).catch(res => {
@@ -63,7 +92,7 @@ Page({
       that.setData({
         [page]: i + 1
       })
-      that.getOrderList()
+      that.getOrderList('loadMore')
     } else {
       wx.showToast({
         title: '没有更多数据了',
@@ -79,8 +108,16 @@ Page({
   },
   onShow: function () {
     let that = this
-    setTimeout(function () {
+    if (that.data.refresh) {
+      // console.log('that.data.refresh:', that.data.refresh)
+      // setTimeout(function () {
       that.getOrderList()
-    }, 1000)
+      // }, 1000)
+    } else {
+      // console.log('that.data.refresh:', that.data.refresh)
+      that.setData({
+        refresh: true
+      })
+    }
   },
 })

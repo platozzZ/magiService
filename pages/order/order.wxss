@@ -15,9 +15,18 @@ form{
 }
 .weui-cell .weui-cell__bd{
   font-size: 34rpx;
+  padding-left: 15px;
 }
 .weui-label{
-  width: 160rpx;
+  width: auto;
+  position: relative;
+}
+.required.weui-label::before{
+  position: absolute;
+  content: '*';
+  left: -16rpx;
+  top: 0;
+  color: #ff4444;
 }
 .weui-cell__bd{
   text-align: right;

@@ -5,6 +5,8 @@ page{
   box-sizing: border-box;
   background: #f2f3f5;
   color: #353535;
+  position: relative;
+  z-index: 9999998;
 } 
 .container{
   display: flex;
@@ -12,7 +14,8 @@ page{
   flex-direction: column;
   height: 100%;
   width: 100%;
-  position: relative;
+  position: absolute;
+  left: 0;
 }
 .scroll{
   flex:1;

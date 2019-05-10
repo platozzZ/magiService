@@ -1,10 +1,77 @@
-<!--index.wxml-->
-<view class="container">
-  <scroll-view class='scroll' scroll-y lower-threshold="50" bindscrolltolower="scrollLoading">
-    <!-- <block wx:for="{{List}}" wx:key="{{index}}">
-      <van-cell title="{{item.address}}" data-index = "{{index}}" is-link value="下单" url="../order/index" />
-    </block> -->
-    <block wx:for="{{art}}" wx:key="{{index}}" data-index = "{{index}}">
+<navbar title="麦极服务"></navbar>
+<view class="container" style="top: {{containerTop}}px; height: {{containerHeight}}px">
+<!-- <view class="container"> -->
+  <scroll-view class='scroll' scroll-y >
+    <view class='banner'>
+      <image class='bgImages' mode="widthFix" src="../../images/bg.jpg"></image>
+      <image class='logo' mode="widthFix" src='../../images/logo.png'></image>
+      <view class='text'>
+        <view class='banner-title'>省心做民宿</view>
+        <view class='banner-text'>卫生死角全覆盖，30+项服务标准</view>
+        <view class='banner-text'>房主省心，房客舒心</view>
+      </view>
+    </view>
+    <view class='content'>
+      <view class='content-panel'>
+        <view class='content-title'>最有竞争力的服务价格</view>
+        <view class='content-section'>
+          <view class="tableView">
+            <view class="table_header">
+              <view class="th"> </view>
+              <view class="th">一居室</view>
+              <view class="th">二居室</view>
+              <view class="th">三居室</view>
+            </view>
+            <view class="table_cell">
+              <view class="td">标准价格</view>
+              <view class="td line-through">￥50</view>
+              <view class="td line-through">￥70</view>
+              <view class="td line-through">￥90</view>
+            </view>
+            <view class="table_cell">
+              <view class="td">体验价格</view>
+              <view class="td">￥39</view>
+              <view class="td">￥59</view>
+              <view class="td">￥79</view>
+            </view>
+          </view>
+          <view class='content-tips'>现在下单，享受体验价格！</view>
+        </view>
+      </view>
+
+      <view class='content-panel'>
+        <view class='content-title'>行业最严格的服务标准</view>
+        <view class='content-section'>
+          <block wx:for="{{standardData}}" wx:key='*this'>
+            <view class='content-flex'>
+              <view class='content-flex-left'><view class='content-capsule'>{{item.title}}</view></view>
+              <view class='content-flex-right'>
+                <view wx:for="{{item.list}}" wx:for-item="list" wx:key='*this'>{{list.text}}</view>
+              </view>
+            </view>
+          </block>
+          <view class='content-tips'>超过30项服务标准，保证服务质量</view>
+        </view>
+      </view>
+
+      <view class='content-panel'>
+        <view class='content-title'>全面细致的保洁范围</view>
+        <view class='content-section'>
+          <view class="content-section-grids">
+            <block wx:for="{{grids}}" wx:key="*this">
+                <view url="" class="content-section-grid">
+                  <image class="weui-grid__icon" src="{{item.imaurl}}" />
+                  <view class="weui-grid__label">{{item.name}}</view>
+                </view>
+            </block>
+          </view>
+          <view class='content-tips'>不放过每一个死角，保证服务质量</view>
+        </view>
+      </view>
+    </view>
+
+  <!-- <scroll-view class='scroll' scroll-y lower-threshold="50" bindscrolltolower="scrollLoading"> -->
+    <!-- <block wx:for="{{art}}" wx:key="{{index}}" data-index = "{{index}}">
       <view class='weui-panel'>
         <view class="weui-cells weui-cells_after-title">
             <view bindtap='toOrder' class="weui-cell weui-cell_access" hover-class="weui-cell_active" data-index = '{{index}}'>
@@ -13,17 +80,21 @@
             </view>
         </view>
       </view>
-    </block>
+    </block> -->
+    <navigator class='myOrder' url='../orderList/orderList?showHome=false'>我的订单</navigator>
+    <!-- <view class='img'>
+      <image
+        class='bgImages'
+        mode="widthFix"
+        src="../../images/index.png"
+      ></image>
+    </view> -->
+  
+  
   </scroll-view>
-  <!-- <button catchtouchmove="buttonMove" catchtouchstart="buttonStart" catchtouchend="buttonEnd" style="top:{{buttonTop}}px;left:{{buttonLeft}}px;width: 50px;height:50px;border-radius:50px;position:fixed;background:#ff6700;line-height:50px;font-size:25pt;color:#fff;">+</button> -->
-  <!-- <form>  
-    <view class='addButton' hover-class='navigator-hover' bindtap='onekeyOrder'>
-      <view class='inline'>一键</view><view class='inline'>下单</view>
-      <button class='form_button'></button>
-    </view>
-  </form> -->
+  <view class='btn-submit' bindtap='onekeyOrder' hover-class='navigator-hover'>立即下单</view>
 </view>
-<movable-area style="width:{{screenWidth}}px;height:{{screenHeight}}px;position: fixed;top:0;left:0;pointer-events: none;">
+<!-- <movable-area style="width:{{screenWidth}}px;height:{{screenHeight}}px;position: fixed;top:0;left:0;pointer-events: none;">
   <movable-view x="{{screenWidth}}" y="{{top}}" direction="all" class='addButton' hover-class='navigator-hover' bindtap='onekeyOrder' style='pointer-events: auto;'>
     <form>  
       <view class='view'>
@@ -32,9 +103,4 @@
       </view>
     </form>
   </movable-view>
-</movable-area>
-<image
-  class='bgImages'
-  mode="aspectFit"
-  src="../../images/bg.png"
-></image>
+</movable-area> -->

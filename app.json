@@ -1,36 +1,16 @@
 {
   "pages": [
-    "pages/home/home",
     "pages/index/index",
-    "pages/orderList/orderList",
     "pages/order/order",
-    "pages/orderDetail/orderDetail",
-    "pages/logs/logs"
+    "pages/orderList/orderList",
+    "pages/orderDetail/orderDetail"
   ],
-  "tabBar": {
-    "color": "#8a8a8a",
-    "selectedColor": "#014099",
-    "borderStyle": "white",
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "地址列表",
-        "iconPath": "images/address.png",
-        "selectedIconPath": "images/address_cur.png"
-      },
-      {
-        "pagePath": "pages/orderList/orderList",
-        "text": "订单列表",
-        "iconPath": "images/order.png",
-        "selectedIconPath": "images/order_cur.png"
-      }
-    ]
-  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "麦极服务",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
   },
   "sitemapLocation": "sitemap.json"
 }

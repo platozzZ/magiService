@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-  },
-  "navigationBarTitleText": "地址列表"
+    "navbar": "/components/navbar/index"
+  }
 }
 

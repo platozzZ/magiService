@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "navbar": "/components/navbar/index"
+  },
   "navigationBarTitleText": "订单详情"
 }

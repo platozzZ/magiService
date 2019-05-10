@@ -1,26 +1,29 @@
-<scroll-view class='scroll' scroll-y="true" lower-threshold="50" bindscrolltolower="scrollLoading">
-  <block wx:for='{{art}}' wx:key="{{item.id}}">
-    <view class="weui-form-preview" bindtap='toDetail' hover-class="weui-cell_active" data-index = "{{index}}" data-id = "{{item.id}}">
-      <view class="weui-form-preview__hd">
-          <view class="weui-form-preview__item">
-              <view class="weui-form-preview__label">订单号:{{item.id}}</view>
-              <view class="weui-form-preview__value_in-hd">{{item.status}}</view>
-          </view>
-      </view>
-      <view class="weui-form-preview__bd">
-          <view class="weui-form-preview__item">
-          
-              <view class="weui-form-preview__label">房源地址</view>
-              <view class="weui-form-preview__value">{{item.address}}</view>
-          </view>
-          <view class="weui-form-preview__item">
-              <view class="weui-form-preview__label">服务时间</view>
-              <view class="weui-form-preview__value">{{item.service_time}}</view>
-          </view>
-      </view>
-      <view class="weui-form-preview__ft">
-        实付款：<text>￥{{item.amount}}</text>
-      </view>
-  </view>
-  </block>
-</scroll-view>
+<navbar title="订单列表" back home='{{showHome}}'></navbar>
+<view class="container" style="top: {{containerTop}}px; height: {{containerHeight}}px">
+  <scroll-view class='scroll' scroll-y="true" lower-threshold="50" bindscrolltolower="scrollLoading">
+    <block wx:for='{{art}}' wx:key="{{item.id}}">
+      <view class="weui-form-preview" bindtap='toDetail' hover-class="weui-cell_active" data-index = "{{index}}" data-id = "{{item.id}}">
+        <view class="weui-form-preview__hd">
+            <view class="weui-form-preview__item">
+                <view class="weui-form-preview__label">订单号:{{item.id}}</view>
+                <view class="weui-form-preview__value_in-hd">{{item.status}}</view>
+            </view>
+        </view>
+        <view class="weui-form-preview__bd">
+            <view class="weui-form-preview__item">
+            
+                <view class="weui-form-preview__label">房源地址</view>
+                <view class="weui-form-preview__value">{{item.address}}</view>
+            </view>
+            <view class="weui-form-preview__item">
+                <view class="weui-form-preview__label">服务时间</view>
+                <view class="weui-form-preview__value">{{item.service_date}} {{item.service_time}}</view>
+            </view>
+        </view>
+        <view class="weui-form-preview__ft">
+          实付款：<text>￥{{item.amount}}</text>
+        </view>
+    </view>
+    </block>
+  </scroll-view>
+</view>
