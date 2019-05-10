@@ -48,7 +48,7 @@
       </view> -->
       <view class="weui-cell">
         <view>消耗品的位置:</view>
-        <view>{{art.consumables_location}}</view>
+        <view>{{art.consumables_location? art.consumables_location : '无'}}</view>
       </view>
       <view class="weui-cell">
         <view>订单备注:</view>
