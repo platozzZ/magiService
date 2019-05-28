@@ -312,8 +312,8 @@ Page({
     // console.log(data) 
     let that = this
     wx.showLoading({
-      title: '',
-      icon: 'none'
+      title: '加载中',
+      mask: true
     })
     api.request('/fuwu/order/add.do', 'POST', app.globalData.token, data).then(res => {
       console.log('pay:', res.data);
@@ -496,7 +496,20 @@ Page({
         price: 79
       })
     }
-  }
+  },
+  // onShareAppMessage: function (options) {
+  //   console.log(options)
+  //   return {
+  //     title: '麦极服务',
+  //     path: "/pages/order/order",
+  //     success: function (res) {
+  //       console.log('onShareAppMessage  success:', res)
+  //     },
+  //     fail: function (res) {
+  //       console.log('onShareAppMessage  fail:', res)
+  //     }
+  //   }
+  // }
   // getRule() {
   //   let that = this
   //   let formValue = that.data.form //获取地址参数

@@ -1,6 +1,6 @@
-<navbar title="麦极服务"></navbar>
-<view class="container" style="top: {{containerTop}}px; height: {{containerHeight}}px">
-<!-- <view class="container"> -->
+<!-- <navbar title="麦极服务"></navbar> -->
+<!-- <view class="container" style="top: {{containerTop}}px; height: {{containerHeight}}px"> -->
+<view class="container">
   <scroll-view class='scroll' scroll-y >
     <view class='banner'>
       <image class='bgImages' mode="widthFix" src="../../images/bg.jpg"></image>
@@ -42,11 +42,11 @@
       <view class='content-panel'>
         <view class='content-title'>行业最严格的服务标准</view>
         <view class='content-section'>
-          <block wx:for="{{standardData}}" wx:key='*this'>
+          <block wx:for="{{standardData}}" wx:key='{{item.title}}'>
             <view class='content-flex'>
               <view class='content-flex-left'><view class='content-capsule'>{{item.title}}</view></view>
               <view class='content-flex-right'>
-                <view wx:for="{{item.list}}" wx:for-item="list" wx:key='*this'>{{list.text}}</view>
+                <view wx:for="{{item.list}}" wx:for-item="list" wx:key='{{list.text}}'>{{list.text}}</view>
               </view>
             </view>
           </block>
@@ -58,7 +58,7 @@
         <view class='content-title'>全面细致的保洁范围</view>
         <view class='content-section'>
           <view class="content-section-grids">
-            <block wx:for="{{grids}}" wx:key="*this">
+            <block wx:for="{{grids}}" wx:key="{{item.name}}">
                 <view url="" class="content-section-grid">
                   <image class="weui-grid__icon" src="{{item.imaurl}}" />
                   <view class="weui-grid__label">{{item.name}}</view>
@@ -81,20 +81,13 @@
         </view>
       </view>
     </block> -->
-    <navigator class='myOrder' url='../orderList/orderList?showHome=false'>我的订单</navigator>
-    <!-- <view class='img'>
-      <image
-        class='bgImages'
-        mode="widthFix"
-        src="../../images/index.png"
-      ></image>
-    </view> -->
+    <!-- <navigator class='myOrder' url='../orderList/orderList?showHome=false'>我的订单</navigator> -->
   
   
   </scroll-view>
-  <view class='btn-submit' bindtap='onekeyOrder' hover-class='navigator-hover'>立即下单</view>
+  <!-- <view class='btn-submit' bindtap='onekeyOrder' hover-class='navigator-hover'>立即下单</view> -->
 </view>
-<!-- <movable-area style="width:{{screenWidth}}px;height:{{screenHeight}}px;position: fixed;top:0;left:0;pointer-events: none;">
+<movable-area style="width:{{screenWidth}}px;height:{{screenHeight}}px;position: fixed;top:0;left:0;pointer-events: none;">
   <movable-view x="{{screenWidth}}" y="{{top}}" direction="all" class='addButton' hover-class='navigator-hover' bindtap='onekeyOrder' style='pointer-events: auto;'>
     <form>  
       <view class='view'>
@@ -103,4 +96,4 @@
       </view>
     </form>
   </movable-view>
-</movable-area> -->
+</movable-area>

@@ -1,5 +1,6 @@
-const baseUrl = "https://fuwu.magi.link"
-// const baseUrl = "http://192.168.1.35:8080"
+// const baseUrl = "https://fuwu.magi.link"
+// const baseUrl = "http://192.168.1.30:8080"
+const baseUrl = "https://test01fuwu.magi.link"
 //添加事件结束
 Promise.prototype.finally = function (callback) {
   var Promise = this.constructor;

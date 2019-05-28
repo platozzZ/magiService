@@ -2,13 +2,18 @@
 const api = require('./utils/request.js')
 App({
   onLaunch: function () {
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
     wx.getSystemInfo({
       success: res => {
-        console.log(res)
+        // console.log(res)
         //导航高度
         this.globalData.statusBarHeight = res.statusBarHeight
         this.globalData.navigationBarHeight = res.statusBarHeight + 44
         this.globalData.containerHeight = res.screenHeight - res.statusBarHeight - 44
+        this.globalData.screenWidth = res.screenWidth
       }, fail(err) {
         console.log(err);
       }
@@ -22,6 +27,7 @@ App({
           api.wxLogin('/weixin/exchange', 'POST', data).then(res => {
             console.log('app-success:', res.data);
             if (res.data.rlt_code == 'S_0000') {
+              wx.hideLoading()
               that.globalData.token = res.data.data.access_token;
               that.globalData.open_id = res.data.data.open_id
               wx.setStorageSync('token', res.data.data.access_token)
@@ -78,6 +84,7 @@ App({
     userInfo: null,
     statusBarHeight: 0,
     navigationBarHeight: 0,
-    containerHeight: 0
+    containerHeight: 0,
+    screenWidth: 0
   }
 })

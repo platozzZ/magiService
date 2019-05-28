@@ -1,0 +1,29 @@
+<view class="container">
+  <scroll-view class='scroll' scroll-y >
+    <view class="weui-panel addressList">
+      <block wx:for="{{addressList}}" wx:key="*this">
+        <!-- <radio-group bindchange="chooseAddress">
+          <label class="weui-cell weui-check__label" data-index="{{index}}">
+            <radio class="weui-check" value="{{item.address}}" checked="{{item.checked}}"/>
+            <view class="weui-cell__bd">{{item.address}}</view>
+          </label>
+        </radio-group> -->
+        <view class="weui-media-box weui-media-box_text {{addressStatus == 1? 'status':''}}" data-index="{{index}}" bindtap="{{addressStatus == 1? '':'chooseAddress'}}" data-id="{{item.id}}">
+          <block wx:if="{{addressStatus == 0}}">
+            <image class='radio' src='../../images/radio.png' wx:if="{{!item.checked}}"></image>
+            <image class='radio' src='../../images/radios.png' wx:else></image>
+          </block>
+          <view class="weui-media-box__desc">{{item.address}}</view>
+          <view class="weui-media-box__info">
+              <view class="weui-media-box__info__meta">{{item.contact_name}}</view>
+              <view class="weui-media-box__info__meta">{{item.contact_mobile}}</view>
+          </view>
+          <block wx:if="{{addressStatus == 1}}">
+            <image src='../../images/delete.png' class='delete' data-id='{{item.id}}' catchtap='deleteAddress'></image>
+          </block>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+  <navigator class="{{addressList.length > 0 ? 'address-yes' : 'address-no'}}" url='../addaddress/addaddress?addstatus={{addressStatus}}'>添加房源</navigator>
+</view>

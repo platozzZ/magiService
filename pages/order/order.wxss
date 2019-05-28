@@ -58,7 +58,7 @@ form{
 .btn-pay{
     position: relative;
     color: #fff;
-    background-color: rgb(1, 64, 153);
+    background-color: #014099;
     padding-left: 30rpx;
     padding-right: 30rpx;
     border: 0;

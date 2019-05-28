@@ -8,68 +8,114 @@ Page({
       current_page: 1,
       page_size: 20
     },
+    kf_mobile: '',
+    kf_wechat: '',
     total_page: '',
-    refresh: false,
-    showHome: false,
+    loadMore: false,
+    hasAddress: false,
     containerTop: app.globalData.navigationBarHeight,
     containerHeight: app.globalData.containerHeight
   },
   onLoad: function (options) {
     let that = this
+    that.getMobile()
     console.log(options)
-    if (options.showHome == 'false'){
-      that.setData({
-        showHome: false
-      })
-    } else {
-      that.setData({
-        showHome: true
-      })
-    }
-    setTimeout(function () {
-      that.getOrderList()
-    }, 1000)
   },
-  getOrderList(e){
+  getOrderList(i,v){
     wx.showLoading({
-      title: '',
+      title: '加载中',
+      mask: true
     })
     let that = this
-    let data = that.data.pages
-    console.log(data)
-    api.request('/fuwu/order/list.do', 'POST', app.globalData.token, data).then(res => {
+    let datas = {
+      current_page: i,
+      page_size: 20
+    }
+    console.log(datas)
+    api.request('/fuwu/order/list.do', 'POST', app.globalData.token, datas).then(res => {
+      console.log(res.data)
       wx.hideLoading()
       if (res.data.rlt_code == 'S_0000') {
         let data = res.data.data.rows
-        console.log(data)
         if(!!data){
-          // console.log(data)
-          // console.log('getOrderList:', res.data);
           let art
-          if (e == 'loadMore') {
-            art = that.data.art.concat(data)
-          } else {
+          if (i == 1) {
             art = data
+          } else {
+            art = that.data.art.concat(data)
           }
-          art.map(function (item) {
-            // item.service_time = util.formatAllTime(new Date(item.service_time))
-            if (item.order_status == 0 && item.pay_status == 0) {
-              item.status = '已完成'
-            } else if (item.order_status == 1 && item.pay_status == 0) {
-              item.status = '已预约'
-            } else if (item.order_status == 1 && item.pay_status == 1) {
-              item.status = '未支付'
+          art.map((item,index,arr) => {
+            item.serviceType = item.service_type_code == 0 ? '田螺姑娘':'甩手掌柜'
+            // item.status = that.switchStatus(item.order_status + '')
+            item.expireTime = util.formatTimes(new Date(item.order_expire_time))
+            let obj = {
+              ['0_0']: {
+                status: 0,
+                orderStatus: '待支付'
+              }, ['2_1']: {
+                status: 1,
+                orderStatus: '预约成功'
+              }, ['3_2']: {
+                status: 2,
+                orderStatus: '已完成'
+              }, ['4_0']: {
+                status: 3,
+                orderStatus: '已取消'
+              }, ['4_2']: {
+                status: 4,
+                orderStatus: '已取消',
+                payStatus: '退款中'
+              }, ['4_3']: {
+                status: 5,
+                orderStatus: '已取消',
+                payStatus: '退款成功'
+              }, ['4_4']: {
+                status: 6,
+                orderStatus: '已取消',
+                payStatus: '退款失败'
+              }
             }
+            let actions = obj[item.order_status + '_' + item.pay_status]
+            item.status = actions.status
+            item.orderStatus = actions.orderStatus
+            item.payStatus = actions.payStatus
+            // if (item.order_status == 0 && item.pay_status == 0){
+            //   item.status =  '0'
+            //   item.orderStatus = '待支付'
+            // } else if (item.order_status == 2 && item.pay_status == 1) {
+            //   item.status = '1'
+            //   item.orderStatus = '预约成功'
+            // } else if (item.order_status == 3 && item.pay_status == 2) {
+            //   item.status = '2'
+            //   item.orderStatus = '已完成'
+            // } else if (item.order_status == 4 && item.pay_status == 0) {
+            //   item.status = '3'
+            //   item.orderStatus = '已取消'
+            // } else if (item.order_status == 4 && item.pay_status == 2) {
+            //   item.status = '4'
+            //   item.orderStatus = '已取消'
+            //   item.payStatus = '退款中'
+            // } else if (item.order_status == 4 && item.pay_status == 3) {
+            //   item.status = '5'
+            //   item.orderStatus = '已取消'
+            //   item.payStatus = '退款成功'
+            // } else if (item.order_status == 4 && item.pay_status == 4) {
+            //   item.status = '6'
+            //   item.orderStatus = '已取消'
+            //   item.payStatus = '退款失败'
+            // }
             return item
           });
+          console.log(art)
           that.setData({
             art: art,
-            total_page: res.data.data.total_page
+            total_page: res.data.data.total_page,
+            'pages.current_page': res.data.data.current_page
           })
+          
         } else {
-          wx.showToast({
-            title: '暂无更多数据',
-            icon: 'none'
+          that.setData({
+            art: [],
           })
         }
       } else {
@@ -84,19 +130,34 @@ Page({
       // console.log('getAddress-finally:', "结束");
     })
   },
+  switchStatus(e){
+    switch (e) {
+      case '0':
+        return '未支付'
+      case '1':
+        return '未接单'
+      case '2':
+        return '已接单'
+      case '3':
+        return '已完成'
+      case '4':
+        return '退款中'
+      case '5':
+        return '已取消'
+      case '6':
+        return '退款失败'
+      case '7':
+        return '退款成功'
+    }
+  },
   scrollLoading(e) {
     let that = this
-    let page = 'pages.current_page'
     let i = that.data.pages.current_page
     if (that.data.total_page > i) {
-      that.setData({
-        [page]: i + 1
-      })
-      that.getOrderList('loadMore')
+      that.getOrderList(i + 1)
     } else {
-      wx.showToast({
-        title: '没有更多数据了',
-        icon: 'none'
+      that.setData({
+        loadMore: true
       })
     }
   },
@@ -106,18 +167,209 @@ Page({
       url: '../orderDetail/orderDetail?order_id=' + id,
     })
   },
-  onShow: function () {
+  showToast(e) {
+    wx.showToast({
+      title: e,
+      icon: 'none',
+      mask: true
+    })
+  },
+  toPay(e){
+    console.log(e)
     let that = this
-    if (that.data.refresh) {
-      // console.log('that.data.refresh:', that.data.refresh)
-      // setTimeout(function () {
-      that.getOrderList()
-      // }, 1000)
+    let data = {order_id: e.currentTarget.dataset.id}
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
+    api.request('/fuwu/order/repay.do', 'POST', app.globalData.token, data).then(res => {
+      console.log('pay:', res.data);
+      wx.hideLoading()
+      let payData = res.data
+      if (payData.rlt_code == 'S_0000') {
+        wx.requestPayment({
+          timeStamp: payData.data.timeStamp,
+          nonceStr: payData.data.nonceStr,
+          package: payData.data.package,
+          signType: payData.data.signType,
+          paySign: payData.data.paySign,
+          success(res) {
+            wx.hideLoading()
+            console.log(res)
+          },
+          fail(res) {
+            wx.hideLoading()
+            console.log(res)
+            wx.showModal({
+              title: '提示',
+              showCancel: false,
+              content: '支付失败',
+            })
+          },
+          complete: function (res) {
+            console.log(res)
+          }
+        })
+      } else {
+        console.log('payData:', payData)
+        wx.hideLoading()
+        that.showToast(payData.rlt_msg)
+        
+      }
+    }).catch(res => {
+      console.log('pay-fail:', res);
+    }).finally(() => { })
+  },
+  toCancel(e) {
+    let that = this
+    let date = e.currentTarget.dataset.date
+    let time = e.currentTarget.dataset.time
+    let timeNow = Date.parse(new Date()) + 24 * 60 * 60 * 1000
+    let serviceTime = Date.parse(new Date(date.replace(/-/g, '/') + ' ' + time))
+    if (serviceTime > timeNow) {
+      let data = { order_id: e.currentTarget.dataset.id }
+      wx.showLoading({
+        title: '加载中',
+        mask: true
+      })
+      api.request('/fuwu/order/cancel.do', 'POST', app.globalData.token, data).then(res => {
+        console.log('cancel:', res.data);
+        wx.hideLoading()
+        if (res.data.rlt_code == 'S_0000') {
+          that.getOrderList(1)
+        } else {
+          wx.showToast({
+            title: res.rlt_msg,
+            icon: 'none',
+            mask: true
+          })
+        }
+      }).catch(res => {
+        console.log('pay-fail:', res);
+      }).finally(() => { })
     } else {
-      // console.log('that.data.refresh:', that.data.refresh)
+      wx.showToast({
+        title: '服务人员已准备就绪，无法取消',
+        icon: 'none',
+        mask: true
+      })
+    }
+    
+  },
+  toAgain(e) {
+    console.log(e)
+    let that = this
+    let art = that.data.art
+    let index = e.currentTarget.dataset.index
+    let data = JSON.stringify(art[index])
+    wx.navigateTo({
+      url: '../toorder/toorder?data=' + data,
+    })
+  },
+  onShow() {
+    console.log('onShow')
+    let that = this
+    that.getOrderList(1)
+  },
+  onHide(){
+    console.log('onHide')
+  },
+  onUnload: function () {
+    console.log('onUnload')
+  },
+  contactUs(e) {
+    let that = this
+    wx.showModal({
+      title: '联系客服',
+      content: '是否确认联系客服？',
+      success(res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+          that.makePhone(e)
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+
+  },
+  makePhone(e) {
+    wx.makePhoneCall({
+      phoneNumber: e,
+      success: function (res) {
+        console.log(res)
+      }
+    })
+  },
+  getMobile(e) {
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
+    let that = this
+    api.request('/fuwu/service/kf_contact', 'POST').then(res => {
+      console.log('mobile:', res.data);
+      wx.hideLoading()
+      if (res.data.rlt_code == 'S_0000') {
+        that.setData({
+          kf_mobile: res.data.data.kf_mobile,
+          kf_wechat: res.data.data.kf_wechat
+        })
+      }
+    }).catch(res => {
+      console.log('getAddress-fail:', res);
+    }).finally(() => {
+      // console.log('getAddress-finally:', "结束");
+    })
+  },
+  copyWechartCode(e) {
+    wx.setClipboardData({
+      data: this.data.kf_wechat,
+      success(res) {
+        console.log(res)
+      }
+    })
+  },
+  openActionSheet() {
+    let that = this
+    wx.showActionSheet({
+      itemList: ['拨打客服电话', '添加客服微信'],
+      success: function (res) {
+        if (res.tapIndex == 0) {
+          let phone = that.data.kf_mobile
+          that.contactUs(phone)
+        } else if (res.tapIndex == 1) {
+          that.copyWechartCode()
+        }
+      }
+    });
+  },
+  onPullDownRefresh() {
+    this.getOrderList(1)
+    wx.stopPullDownRefresh()
+  },
+  onReachBottom() {
+    let that = this
+    let i = that.data.pages.current_page
+    if (that.data.total_page > i) {
+      that.getOrderList(i + 1)
+    } else {
       that.setData({
-        refresh: true
+        loadMore: true
       })
     }
   },
+  // onShareAppMessage: function (options) {
+  //   console.log(options)
+  //   return {
+  //     title: '麦极服务',
+  //     path: "/pages/orderList/orderList",
+  //     success: function (res) {
+  //       console.log('onShareAppMessage  success:', res)
+  //     },
+  //     fail: function (res) {
+  //       console.log('onShareAppMessage  fail:', res)
+  //     }
+  //   }
+  // }
 })

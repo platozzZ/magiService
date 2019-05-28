@@ -1,7 +1,8 @@
 <!-- <nav-bar inner-title="呼叫麦极服务" is-show-back="true"></nav-bar> -->
 <form bindsubmit="formSubmit" bindreset="formReset" report-submit="true">  
-<navbar title="呼叫麦极服务" back></navbar>
-<view class="container" style="top: {{containerTop}}px; height: {{containerHeight}}px">
+<!-- <navbar title="呼叫麦极服务" back></navbar> -->
+<!--  style="top: {{containerTop}}px; height: {{containerHeight}}px" -->
+<view class="container">
   <scroll-view class='scroll' scroll-y>
     <view class="weui-cells weui-cells_after-title">
       <!-- 房源地址 -->

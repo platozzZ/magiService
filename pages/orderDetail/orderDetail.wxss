@@ -4,6 +4,103 @@ page {
   height: 100%;
   width: 100%;
 }
+
+.weui-media-box__desc{
+  color: #353535;
+  -webkit-line-clamp: 10;
+}
+.service{
+  display: flex;
+  justify-content: space-between;
+}
+.btn-submit{
+  background: #014099;
+  line-height: 100rpx;
+  text-align: center;
+  color: #fff;
+}
+.amount-tips{
+  text-align: right;
+  padding-top: 5px;
+}
+.amount{
+  position: relative;
+  padding-right: 20px;
+}
+.arrow{
+  position: absolute;
+  right: 0;
+  top: 4px;
+  width: 0;
+  height: 0;
+  border: 8px solid;
+  border-color: rgba(53, 53, 53,.5) transparent transparent transparent;
+}
+.arrow:after{
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -8px;
+  border: 8px solid;
+  border-color: white transparent transparent transparent;
+}
+.arrow.active{
+  transform: rotate(180deg);
+  top: -4px;
+}
+.popupAmount{
+  position: absolute;
+  font-size: 12px;
+  padding: 10px;
+  right: 10px;
+  background: #fff;
+  border-radius: 5px;
+  -moz-box-shadow:2px 2px 5px #353535; 
+  -webkit-box-shadow:2px 2px 5px #353535; 
+  box-shadow:2px 2px 5px #353535;
+}
+
+.triangle{
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-width: 8px;
+    border-style: dashed dashed solid;
+    top: -17px;
+    right: 27px;
+    border-color: transparent transparent #cdcdcd;
+}
+.triangle view{
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-width: 8px;
+    border-style: dashed dashed solid;
+    top: -7px;
+    left: -8px;
+    border-color: transparent transparent #fff;
+}
+/* .triangle{
+    width:0;
+    height:0;
+    border-width:0 30px 30px;
+    border-style:solid;
+    border-color:transparent transparent #333;
+    margin:40px auto;
+    position:relative;
+}
+.triangle view{
+    width:0;
+    height:0;
+    border-width:0 28px 28px;
+    border-style:solid;
+    border-color:transparent transparent #fc0;
+    position:absolute;
+    top:0px;
+    left:0px;
+} */
+
+
 .weui-cell{
   font-size: 32rpx;
 }

@@ -4,14 +4,15 @@ const api = require('../../utils/request.js')
 Page({
   data: {
     art: [],
-    containerTop: app.globalData.navigationBarHeight,
-    containerHeight: app.globalData.containerHeight
+    popuTop: '',
+    showPopu: true
   },
   onLoad: function (options) {
     let that = this
     console.log(options)
     wx.showLoading({
-      title: '',
+      title: '加载中',
+      mask: true
     })
     console.log(that.switchHouseType('0'))
     that.getOrderDetail(options.order_id)
@@ -27,24 +28,40 @@ Page({
       wx.hideLoading()
       let data = res.data.data
       
-      data.serviceType = that.switchServiceType(data.service_type)
-      data.houseType = that.switchHouseType(data.house_type)
-      data.cleanType = that.switchCleanType(data.hl_clean_type) //布草清洗方式
-      data.doorType = that.switchDoorType(data.open_door_type) //保洁开门方式
-      // data.cleanType = that.switchCleanType(data.hl_clean_type) //布草清洗方式
-      // 钥匙位置   智能锁密码
-      // if (data.open_door_type == '0'){
-      //   data.doorTitle = '智能锁密码'
-      // } else {
-      //   data.doorTitle = '钥匙位置'
-      // }
-      if (data.order_status == 0 && data.pay_status == 0) {
-        data.status = '已完成'
-      } else if (data.order_status == 1 && data.pay_status == 0) {
-        data.status = '已预约'
-      } else if (data.order_status == 1 && data.pay_status == 1) {
-        data.status = '未支付'
+      data.serviceType = that.switchServiceType(data.service_type_code)
+      data.houseType = that.switchHouseType(data.house_type_code)
+      data.cleanType = that.switchCleanType(data.hl_clean_type_code) //布草清洗方式
+      let obj = {
+        ['0_0']: {
+          status: 0,
+          orderStatus: '待支付'
+        }, ['2_1']: {
+          status: 1,
+          orderStatus: '预约成功'
+        }, ['3_2']: {
+          status: 2,
+          orderStatus: '已完成'
+        }, ['4_0']: {
+          status: 3,
+          orderStatus: '已取消'
+        }, ['4_2']: {
+          status: 4,
+          orderStatus: '已取消',
+          payStatus: '退款中'
+        }, ['4_3']: {
+          status: 5,
+          orderStatus: '已取消',
+          payStatus: '退款成功'
+        }, ['4_4']: {
+          status: 6,
+          orderStatus: '已取消',
+          payStatus: '退款失败'
+        }
       }
+      let actions = obj[data.order_status + '_' + data.pay_status]
+      data.status = actions.status
+      data.orderStatus = actions.orderStatus
+      data.payStatus = actions.payStatus
       if (res.data.rlt_code == 'S_0000') {
         that.setData({
           art: data
@@ -52,6 +69,14 @@ Page({
       } else {
 
       }
+    })
+  },
+  toAgain(e) {
+    let that = this
+    let art = that.data.art
+    let data = JSON.stringify(art)
+    wx.navigateTo({
+      url: '../toorder/toorder?data=' + data,
     })
   },
   contactUs(e) {
@@ -92,9 +117,9 @@ Page({
   switchServiceType(e) {
     switch (e) {
       case '0':
-        return '田螺姑娘（保洁）'
+        return '田螺姑娘'
       case '1':
-        return '甩手掌柜（保洁+布草）'
+        return '甩手掌柜'
     }
   },
   switchCleanType(e) {
@@ -103,14 +128,6 @@ Page({
         return '房间内洗晾'
       case '1':
         return '固定地点领取'
-    }
-  },
-  switchDoorType(e) {
-    switch (e) {
-      case '0':
-        return '智能锁'
-      case '1':
-        return '机械锁'
     }
   },
   onShow: function () {

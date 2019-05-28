@@ -12,8 +12,8 @@ Page({
     screenHeight: '',
     screenWidth: '',
     top: '',
-    containerTop: app.globalData.navigationBarHeight,
-    containerHeight: app.globalData.containerHeight,
+    // containerTop: app.globalData.navigationBarHeight,
+    // containerHeight: app.globalData.containerHeight,
     standardData: [
       { 
         title: "布草标准", 
@@ -49,7 +49,6 @@ Page({
     ]
   },
   onLoad: function () {
-    console.log('这是新版本，测试一键下单')
     let that = this
     that.getSystemInfo()
     // console.log('that.data.refresh:', that.data.refresh)
@@ -81,15 +80,25 @@ Page({
     })
   },
   onekeyOrder(){
+    // wx.switchTab({
+    //   url: '../orderList/orderList',
+    //   success: function (e) {
+    //     var page = getCurrentPages().pop();
+    //     console.log(page)
+    //     if (page == undefined || page == null) return;
+    //     page.onLoad();
+    //   }
+    // })
     wx.navigateTo({
-      url: '../order/order'
+      // url: '../order/order' 
+      url: '../toorder/toorder'
     })
   },
   getSystemInfo(){
     let that = this
     wx.getSystemInfo({
       success: function (res) {
-        console.log(res);
+        console.log('getSystemInfo:',res);
         // 屏幕宽度、高度
         // console.log('height=' + res.windowHeight);
         // console.log('width=' + res.windowWidth);
@@ -102,33 +111,7 @@ Page({
       }
     })
   },
-  getAddress(e) {
-    wx.showLoading({
-      title: '',
-    })
-    let that = this
-    let data = that.data.pages
-    console.log(data)
-    api.request('/fuwu/house/list.do', 'POST', app.globalData.token, data).then(res => {
-      console.log('getAddress:', res.data);
-      let art
-      if (e == 'loadMore') {
-        art = that.data.art.concat(res.data.data.rows)
-      } else {
-        art = res.data.data.rows
-      }
-      wx.hideLoading()
-      if (res.data.rlt_code == 'S_0000') {
-        that.setData({
-          art: art
-        })
-      }
-    }).catch(res => {
-      console.log('getAddress-fail:', res);
-    }).finally(() => {
-      // console.log('getAddress-finally:', "结束");
-    })
-  },
+  
   onShow(){
     let that = this
     // if (that.data.refresh) {
@@ -142,33 +125,18 @@ Page({
     //     refresh: true
     //   })
     // }
+  },
+  onShareAppMessage: function (options) {
+    console.log(options)
+    return {
+      title: '麦极服务',
+      path: "/pages/index/index",
+      success: function (res) {
+        console.log('onShareAppMessage  success:',res)
+      },
+      fail: function (res) {
+        console.log('onShareAppMessage  fail:', res)
+      }
+    }
   }
-  // buttonStart: function (e) {
-  //   startPoint = e.touches[0]
-  // },
-  // buttonMove: function (e) {
-  //   var endPoint = e.touches[e.touches.length - 1]
-  //   var translateX = endPoint.clientX - startPoint.clientX
-  //   var translateY = endPoint.clientY - startPoint.clientY
-  //   startPoint = endPoint
-  //   var buttonTop = this.data.buttonTop + translateY
-  //   var buttonLeft = this.data.buttonLeft + translateX
-  //   //判断是移动否超出屏幕
-  //   if (buttonLeft + 50 >= this.data.windowWidth) {
-  //     buttonLeft = this.data.windowWidth - 50;
-  //   }
-  //   if (buttonLeft <= 0) {
-  //     buttonLeft = 0;
-  //   }
-  //   if (buttonTop <= 0) {
-  //     buttonTop = 0
-  //   }
-  //   if (buttonTop + 50 >= this.data.windowHeight) {
-  //     buttonTop = this.data.windowHeight - 50;
-  //   }
-  //   this.setData({
-  //     buttonTop: buttonTop,
-  //     buttonLeft: buttonLeft
-  //   })
-  // },
 })
