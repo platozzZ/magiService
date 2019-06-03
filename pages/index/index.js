@@ -12,19 +12,39 @@ Page({
     screenHeight: '',
     screenWidth: '',
     top: '',
-    // containerTop: app.globalData.navigationBarHeight,
-    // containerHeight: app.globalData.containerHeight,
-    standardData: [
+    swiperList:[
       { 
-        title: "布草标准", 
+        url: '../../images/banner-01.jpg', 
+      },
+      {
+        url: '../../images/banner-02.jpg', 
+      },
+      { 
+        url: '../../images/banner-03.jpg', 
+      },
+    ],
+    processList: [
+      { title: '民宿主下单' },
+      { title: '确认订单' },
+      { title: '麦极管家上门' },
+      { title: '打扫前拍照' },
+      { title: '开窗通风' },
+      { title: '开始保洁' },
+      { title: '保洁完成' },
+      { title: '关闭门窗、电源' },
+      { title: '拍照反馈' },
+    ],
+    standardData: [
+      {
+        title: "布草标准",
         list: [
-          { text: '• 统一换布草、床上用品'},
+          { text: '• 统一换布草、床上用品' },
           { text: '• 床单被套平整无皱褶，无毛发无破损' },
           { text: '• 枕头四角饱满，无皱褶' },
           { text: '• 清洗晾晒房东自有布草' }
         ]
       },
-      { 
+      {
         title: '地面标准',
         list: [
           { text: '• 表面干净，无污渍' },
@@ -46,27 +66,31 @@ Page({
       { name: '客厅', imaurl: '../../images/livingroom.png' },
       { name: '厨房', imaurl: '../../images/kitchen.png' },
       { name: '卫生间', imaurl: '../../images/toilet.png' },
-    ]
+    ],
   },
   onLoad: function () {
     let that = this
     that.getSystemInfo()
+    that.getProcess()
     // console.log('that.data.refresh:', that.data.refresh)
     // setTimeout(function () {
     //   that.getAddress()
     // }, 1000)
   },
-  scrollLoading(e){
+  getProcess(){
     let that = this
-    let page = 'pages.current_page'
-    let i = that.data.pages.current_page
-    console.log(i)
-    if (that.data.total_page > i) {
-      that.setData({
-        [page]: i + 1
-      })
-      that.getAddress('loadMore')
-    }
+    let data = that.data.processList
+    data.map((item,index,arr) =>{
+      if (that.paRity(index)){
+        item.left = true
+      }
+    })
+    that.setData({
+      processList: data
+    })
+  },
+  paRity(value){
+    if (value%2 == 0) return true
   },
   toOrder(e) {
     let that = this
@@ -106,7 +130,8 @@ Page({
         that.setData({
           screenHeight: res.windowHeight,
           screenWidth: res.windowWidth,
-          top: res.windowHeight * 0.6
+          top: res.windowHeight * 0.6,
+          imgHeight: res.windowWidth/(640/360)
         })
       }
     })

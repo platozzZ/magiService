@@ -9,7 +9,8 @@
     "pages/deposit/deposit",
     "pages/depositDetail/depositDetail",
     "pages/orderList/orderList",
-    "pages/orderDetail/orderDetail"
+    "pages/orderDetail/orderDetail",
+    "pages/sla/sla"
   ],
   "tabBar": {
     "color": "#8a8a8a",
@@ -43,7 +44,7 @@
     "navigationBarTextStyle": "black"
   },
   "networkTimeout": {
-    "request": 10000,
+    "request": 6000,
     "downloadFile": 10000
   },
   "sitemapLocation": "sitemap.json"

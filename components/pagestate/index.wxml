@@ -1,0 +1,22 @@
+<template name="pageState">
+  <view class="page-state-container" wx:if="{{state != 'finish'}}">
+    <view class="page-state-empty page-state-center" wx:if="{{state == 'empty'}}">
+      <!-- <icon type="info" size="70" /> -->
+      <image src='../../images/order-none.png' class='order-none' mode='widthFix'></image>
+      <view class="message" style='color: #888;'>{{message}}</view>
+    </view>
+    <view class="page-state-loading page-state-center" wx:if="{{state == 'loading'}}">
+      <!-- <icon type="waiting" size="70" /> -->
+      <view class='loading-bg'>
+        <view class='weui-loading'></view>
+        <view class="message">{{message}}</view>
+      </view>
+    </view>
+    <view class="page-state-error page-state-center" wx:if="{{state == 'error'}}">
+      <icon type="warn" size="50" />
+      <!-- <view class="message">{{message}}</view> -->
+      <view class="retrybtn" catchtap="onRetry">点击重试</view>
+      <!-- <button class="retrybtn" type="warn" catchtap="onRetry">点击重试</button> -->
+    </view>
+  </view>
+</template>

@@ -1,5 +1,5 @@
 <wxs module="filters" src="../../utils/addmul.wxs"></wxs>
-<view class="container">
+<view class="container" wx:if="{{art.address}}">
   <scroll-view class='scroll' scroll-y>
     <view class="weui-panel">
       <view class="weui-panel__bd">
@@ -24,7 +24,7 @@
               {{art.address}}
             </view>
           </view>
-          <view class="weui-media-box weui-media-box_text" wx:if="{{art.service_type_code == 0}}">
+          <!-- <view class="weui-media-box weui-media-box_text" wx:if="{{art.service_type_code == 0}}">
             <view class="weui-media-box__title weui-media-box__title_in-text">布草清洗方式</view>
             <view class="weui-media-box__desc">
               {{art.cleanType}}
@@ -32,8 +32,8 @@
             <view class="weui-media-box__desc">
               {{art.hl_location}}
             </view>
-          </view>
-          <view class="weui-media-box weui-media-box_text" wx:else>
+          </view> -->
+          <view class="weui-media-box weui-media-box_text" wx:if="{{art.service_type_code == 1}}">
             <view class="weui-media-box__title weui-media-box__title_in-text">布草数量</view>
             <view class="weui-media-box__desc">
               1.5m：{{art.hl_specs15}} 套
@@ -65,3 +65,4 @@
   </scroll-view>
   <view class='btn-submit' bindtap='toAgain' hover-class='navigator-hover' wx:if="{{art.order_status == 3}}">再来一单</view>
 </view>
+<view wx:else></view>

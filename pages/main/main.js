@@ -50,12 +50,9 @@ Page({
           kf_mobile: res.data.data.kf_mobile,
           kf_wechat: res.data.data.kf_wechat
         })
-      } else {
-        wx.showToast({
-          title: '获取客服信息失败，请重新获取',
-        })
       }
     }).catch(res => {
+      wx.hideLoading()
       console.log('kf_contact-fail:', res);
     }).finally(() => {
       // console.log('getAddress-finally:', "结束");
@@ -65,6 +62,9 @@ Page({
     wx.setClipboardData({
       data: this.data.kf_wechat,
       success(res) {
+        wx.showToast({
+          title: '微信号已复制',
+        })
         console.log(res)
       }
     })

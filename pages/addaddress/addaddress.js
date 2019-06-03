@@ -48,9 +48,9 @@ Page({
     } else {
       api.request('/fuwu/house/add.do', 'POST', app.globalData.token, data).then(res => {
         console.log('addAddress:', res.data);
+        wx.hideLoading()
         let data = res.data
         if (data.rlt_code == 'S_0000'){
-          wx.hideLoading()
           let pages = getCurrentPages();
           let currPage = pages[pages.length - 1]; //当前页面
           let prevPage = pages[pages.length - 3]; //上上一个页面
@@ -66,6 +66,8 @@ Page({
           }
         }
       }).catch(res => {
+        wx.hideLoading()
+        that.showToast(res.data.rlt_msg)
         console.log('getAddress-fail:', res);
       }).finally(() => {
         // console.log('getAddress-finally:', "结束");

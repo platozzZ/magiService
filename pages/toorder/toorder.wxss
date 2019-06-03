@@ -5,6 +5,11 @@ page{
   height:100%;
   width:100%;
 }
+::-webkit-scrollbar{
+width: 0;
+height: 0;
+color: transparent;
+}
 form{
     width: 100%;
 }
@@ -39,8 +44,8 @@ form{
 .weui-label{
   width: auto;
 }
-.service-top .weui-cell__bd{
-  /* padding: 0 10px 0 15px; */
+.service-top .weui-cell{
+  padding: 15px;
 }
 .weui-media-box::before,.weui-cell.border-none::before,.weui-cells::after,.weui-panel::before,weui-panel::after{
   display: none;
@@ -49,7 +54,7 @@ form{
   margin-bottom: 10px;
 }
 .weui-media-box{
-  padding: 15px 15px 0;
+  padding: 15px;
 }
 .weui-media-box:last-child{
   padding: 15px;
@@ -70,7 +75,7 @@ form{
 }
 .croot-btn{
   height: 56rpx;
-  padding: 0 20px;
+  padding: 0 10px;
   line-height: 56rpx;
   text-align: center;
   color: #a1a1a1;
@@ -93,6 +98,10 @@ form{
 }
 .typeTitle{
   font-size: 14px;
+}
+.typeTitle view{
+  font-size: 11px;
+  padding-left: 10px;
 }
 .typeContainer radio-group label,.stepperContainer{
   width: 100%;
@@ -382,6 +391,7 @@ radio-group radio{
 .date-item.active{
   font-size: 13px;
   color: #014099;
+  font-weight: 600;
 }
 .date-item view{
   height: 18px;
@@ -424,13 +434,31 @@ radio-group radio{
 .date-tips{
   font-size: 11px;
 }
+.date-radio-group{
+  width: 490px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.date-radio-group .weui-cell{
+  padding: 0;
+  width: 70px;
+  text-align: center;
+  font-size: 12px;
+  float: left;
+}
+.date-radio-group .weui-cell::before{
+  height: 0;
+  border: 0;
+}
 .date-btn{
   margin: 10px 10px 0;
   text-align: center;
   font-size: 13px;
   background: #014099;
   color: #fff;
-  line-height: 30px;
+  line-height: 35px;
+  height: 35px;
   border-radius: 5px;
 }
 .weui-media-box__desc{

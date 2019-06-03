@@ -1,5 +1,6 @@
 const app = getApp()
 const api = require('../../utils/request.js')
+// import pagestate from '../../components/pagestate/index.js'
 Page({
   data: {
     addressList: [],
@@ -11,6 +12,7 @@ Page({
       page_size: 100
     },
     total_page: '',
+    isFirst: true
   },
   onLoad(options) {
     console.log(options)
@@ -72,7 +74,16 @@ Page({
         'form.house_id': house_id
       })
     }
-    wx.navigateBack()
+    if (that.data.isFirst) {
+      wx.navigateBack({
+        delta: 1,
+        success(res){
+          that.setData({
+            isFirst: false
+          })
+        }
+      })
+    }
   },
   deleteAddress(e) {
     console.log(e)
@@ -119,11 +130,14 @@ Page({
       mask: true
     })
     let that = this
+    // const pageState = pagestate(that)
+    // pageState.loading()// 切换为loading状态
     let data = that.data.pages
     console.log(data)
     api.request('/fuwu/house/list.do', 'POST', app.globalData.token, data).then(res => {
       console.log('getAddress:', res.data);
       wx.hideLoading()
+      // pageState.finish()// 切换为finish状态
       if (res.data.rlt_code == "S_0000" && !!res.data.data.rows) {
         let art = res.data.data.rows
         art.map(item => {
@@ -139,13 +153,21 @@ Page({
         })
       }
     }).catch(res => {
+      wx.hideLoading()
+      // pageState.error()// 切换为error状态
       console.log('getAddress-fail:', res);
     }).finally(() => {
       // console.log('getAddress-finally:', "结束");
     })
   },
+  onRetry() {
+    this.onLoad()
+  },
   onShow: function () {
     let that = this
+    that.setData({
+      isFirst: true
+    })
     that.getAddress()
   },
   // onPullDownRefresh() {

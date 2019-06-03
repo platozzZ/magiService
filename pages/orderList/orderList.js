@@ -1,6 +1,7 @@
 const app = getApp()
 const api = require('../../utils/request.js')
 const util = require('../../utils/util.js')
+// import pagestate from '../../components/pagestate/index.js'
 Page({
   data: {
     art: [],
@@ -12,21 +13,23 @@ Page({
     kf_wechat: '',
     total_page: '',
     loadMore: false,
-    hasAddress: false,
-    containerTop: app.globalData.navigationBarHeight,
-    containerHeight: app.globalData.containerHeight
+    refresh: true,
+    toPayFirst: true,
   },
   onLoad: function (options) {
     let that = this
     that.getMobile()
+    // that.getOrderList(1)
     console.log(options)
   },
-  getOrderList(i,v){
+  getOrderList(i, v) {
+    let that = this
+    // const pageState = pagestate(that)
+    // pageState.loading()// 切换为loading状态
     wx.showLoading({
       title: '加载中',
       mask: true
     })
-    let that = this
     let datas = {
       current_page: i,
       page_size: 20
@@ -35,6 +38,7 @@ Page({
     api.request('/fuwu/order/list.do', 'POST', app.globalData.token, datas).then(res => {
       console.log(res.data)
       wx.hideLoading()
+      // pageState.finish()// 切换为finish状态
       if (res.data.rlt_code == 'S_0000') {
         let data = res.data.data.rows
         if(!!data){
@@ -46,7 +50,6 @@ Page({
           }
           art.map((item,index,arr) => {
             item.serviceType = item.service_type_code == 0 ? '田螺姑娘':'甩手掌柜'
-            // item.status = that.switchStatus(item.order_status + '')
             item.expireTime = util.formatTimes(new Date(item.order_expire_time))
             let obj = {
               ['0_0']: {
@@ -79,31 +82,6 @@ Page({
             item.status = actions.status
             item.orderStatus = actions.orderStatus
             item.payStatus = actions.payStatus
-            // if (item.order_status == 0 && item.pay_status == 0){
-            //   item.status =  '0'
-            //   item.orderStatus = '待支付'
-            // } else if (item.order_status == 2 && item.pay_status == 1) {
-            //   item.status = '1'
-            //   item.orderStatus = '预约成功'
-            // } else if (item.order_status == 3 && item.pay_status == 2) {
-            //   item.status = '2'
-            //   item.orderStatus = '已完成'
-            // } else if (item.order_status == 4 && item.pay_status == 0) {
-            //   item.status = '3'
-            //   item.orderStatus = '已取消'
-            // } else if (item.order_status == 4 && item.pay_status == 2) {
-            //   item.status = '4'
-            //   item.orderStatus = '已取消'
-            //   item.payStatus = '退款中'
-            // } else if (item.order_status == 4 && item.pay_status == 3) {
-            //   item.status = '5'
-            //   item.orderStatus = '已取消'
-            //   item.payStatus = '退款成功'
-            // } else if (item.order_status == 4 && item.pay_status == 4) {
-            //   item.status = '6'
-            //   item.orderStatus = '已取消'
-            //   item.payStatus = '退款失败'
-            // }
             return item
           });
           console.log(art)
@@ -113,11 +91,14 @@ Page({
             'pages.current_page': res.data.data.current_page
           })
           
-        } else {
-          that.setData({
-            art: [],
-          })
         }
+        console.log(that.data.art)
+        //  else {
+        //   // pageState.empty()// empty
+        //   // that.setData({
+        //   //   art: [],
+        //   // })
+        // }
       } else {
         wx.showToast({
           title: res.rlt_msg,
@@ -125,46 +106,17 @@ Page({
         })
       }
     }).catch(res => {
+      wx.hideLoading()
+      // pageState.error()// 切换为error状态
       console.log('getOrderList-fail:', res);
     }).finally(() => {
       // console.log('getAddress-finally:', "结束");
     })
   },
-  switchStatus(e){
-    switch (e) {
-      case '0':
-        return '未支付'
-      case '1':
-        return '未接单'
-      case '2':
-        return '已接单'
-      case '3':
-        return '已完成'
-      case '4':
-        return '退款中'
-      case '5':
-        return '已取消'
-      case '6':
-        return '退款失败'
-      case '7':
-        return '退款成功'
-    }
-  },
-  scrollLoading(e) {
-    let that = this
-    let i = that.data.pages.current_page
-    if (that.data.total_page > i) {
-      that.getOrderList(i + 1)
-    } else {
-      that.setData({
-        loadMore: true
-      })
-    }
-  },
   toDetail(e){
     let id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: '../orderDetail/orderDetail?order_id=' + id,
+      url: '../orderDetail/orderDetail?order_id=' + id + '&detail=1',
     })
   },
   showToast(e) {
@@ -175,13 +127,28 @@ Page({
     })
   },
   toPay(e){
-    console.log(e)
     let that = this
-    let data = {order_id: e.currentTarget.dataset.id}
+    if (that.data.toPayFirst){
+      let data = e.currentTarget.dataset.id
+      that.pay(data)
+      that.setData({
+        toPayFirst: false
+      })
+    }
+  },
+  pay(e) {
+    setTimeout(function () {
+      that.setData({
+        toPayFirst: true
+      })
+    }, 1500); 
+    console.log(e)
     wx.showLoading({
       title: '加载中',
       mask: true
     })
+    let that = this
+    let data = { order_id: e}
     api.request('/fuwu/order/repay.do', 'POST', app.globalData.token, data).then(res => {
       console.log('pay:', res.data);
       wx.hideLoading()
@@ -196,6 +163,7 @@ Page({
           success(res) {
             wx.hideLoading()
             console.log(res)
+            that.getOrderList(1)
           },
           fail(res) {
             wx.hideLoading()
@@ -214,7 +182,6 @@ Page({
         console.log('payData:', payData)
         wx.hideLoading()
         that.showToast(payData.rlt_msg)
-        
       }
     }).catch(res => {
       console.log('pay-fail:', res);
@@ -222,39 +189,71 @@ Page({
   },
   toCancel(e) {
     let that = this
-    let date = e.currentTarget.dataset.date
-    let time = e.currentTarget.dataset.time
-    let timeNow = Date.parse(new Date()) + 24 * 60 * 60 * 1000
-    let serviceTime = Date.parse(new Date(date.replace(/-/g, '/') + ' ' + time))
-    if (serviceTime > timeNow) {
-      let data = { order_id: e.currentTarget.dataset.id }
-      wx.showLoading({
-        title: '加载中',
-        mask: true
-      })
-      api.request('/fuwu/order/cancel.do', 'POST', app.globalData.token, data).then(res => {
-        console.log('cancel:', res.data);
-        wx.hideLoading()
-        if (res.data.rlt_code == 'S_0000') {
-          that.getOrderList(1)
-        } else {
-          wx.showToast({
-            title: res.rlt_msg,
-            icon: 'none',
-            mask: true
-          })
+    let status = e.currentTarget.dataset.status
+    let orderId = e.currentTarget.dataset.id
+    if (status == 0){
+      wx.showModal({
+        title: '提示',
+        content: '确定取消订单吗？',
+        success(res) {
+          if (res.confirm) {
+            that.orderCancel(orderId)
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
         }
-      }).catch(res => {
-        console.log('pay-fail:', res);
-      }).finally(() => { })
-    } else {
-      wx.showToast({
-        title: '服务人员已准备就绪，无法取消',
-        icon: 'none',
-        mask: true
       })
+    } else {
+      let date = e.currentTarget.dataset.date
+      let time = e.currentTarget.dataset.time
+      let timeNow = Date.parse(new Date()) + 24 * 60 * 60 * 1000
+      let serviceTime = Date.parse(new Date(date.replace(/-/g, '/') + ' ' + time))
+      if (serviceTime > timeNow) {
+        wx.showModal({
+          title: '提示',
+          content: '确定取消订单？取消后款项原路退回',
+          success(res) {
+            if (res.confirm) {
+              that.orderCancel(orderId)
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+
+      } else {
+        wx.showToast({
+          title: '服务人员已准备就绪，无法取消',
+          icon: 'none',
+          mask: true
+        })
+      }
     }
     
+    
+  },
+  orderCancel(e){
+    let that = this
+    let data = { order_id: e }
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
+    api.request('/fuwu/order/cancel.do', 'POST', app.globalData.token, data).then(res => {
+      console.log('cancel:', res.data);
+      wx.hideLoading()
+      if (res.data.rlt_code == 'S_0000') {
+        that.getOrderList(1)
+      } else {
+        wx.showToast({
+          title: res.rlt_msg,
+          icon: 'none',
+          mask: true
+        })
+      }
+    }).catch(res => {
+      console.log('pay-fail:', res);
+    }).finally(() => {})
   },
   toAgain(e) {
     console.log(e)
@@ -269,12 +268,22 @@ Page({
   onShow() {
     console.log('onShow')
     let that = this
-    that.getOrderList(1)
+    that.setData({
+      toPayFirst: true
+    })
+    console.log(that.data.refresh)
+    if (that.data.refresh){
+      that.getOrderList(1)
+    } else {
+      that.setData({
+        refresh: true
+      })
+    }
   },
   onHide(){
     console.log('onHide')
   },
-  onUnload: function () {
+  onUnload() {
     console.log('onUnload')
   },
   contactUs(e) {
@@ -307,9 +316,12 @@ Page({
       mask: true
     })
     let that = this
+    // const pageState = pagestate(that)
+    // pageState.loading()// 切换为loading状态
     api.request('/fuwu/service/kf_contact', 'POST').then(res => {
       console.log('mobile:', res.data);
       wx.hideLoading()
+      // pageState.finish()// 切换为finish状态
       if (res.data.rlt_code == 'S_0000') {
         that.setData({
           kf_mobile: res.data.data.kf_mobile,
@@ -317,7 +329,9 @@ Page({
         })
       }
     }).catch(res => {
-      console.log('getAddress-fail:', res);
+      wx.hideLoading()
+      // pageState.error()// 切换为error状态
+      console.log('mobile-fail:', res);
     }).finally(() => {
       // console.log('getAddress-finally:', "结束");
     })
@@ -326,12 +340,19 @@ Page({
     wx.setClipboardData({
       data: this.data.kf_wechat,
       success(res) {
+        wx.showToast({
+          title: '微信号已复制',
+        })
         console.log(res)
       }
     })
   },
   openActionSheet() {
     let that = this
+    if (!that.data.kf_mobile || !that.data.kf_wechat) {
+      that.getData()
+      return
+    }
     wx.showActionSheet({
       itemList: ['拨打客服电话', '添加客服微信'],
       success: function (res) {
@@ -358,6 +379,9 @@ Page({
         loadMore: true
       })
     }
+  },
+  onRetry(){
+    this.onLoad()
   },
   // onShareAppMessage: function (options) {
   //   console.log(options)

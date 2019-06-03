@@ -19,20 +19,26 @@ page{
 }
 .banner{
   position: relative;
-  height: 200px;
-  overflow: hidden;
+  height: 180px;
+  /* overflow: hidden; */
+}
+.swiper{
+  width: 100%;
+  height: 100%;
 }
 .logo{
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 15px;
+  left: 15px;
   width: 112px;
   height: 30px;
+  z-index:99999;
 }
 .bgImages{
   width: 100%;
-  opacity: 0.4;
-  height: 200px;
+  /* opacity: 0.4; */
+  /* height: 200px; */
+  vertical-align: bottom;
 }
 .text{
   position: absolute;
@@ -49,12 +55,65 @@ page{
   line-height: 26px;
   font-weight: 600;
 }
+.index-panel{
+  padding: 15px;
+}
+.index-panel.white{
+  background: #fff;
+}
+.index-title{
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 20px;
+  height: 20px;
+  /* margin: 0 0 10px 0; */
+  padding-left: 16px;
+  position: relative;
+}
+.index-title view{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: #014099;
+  border-radius: 5px;
+}
+.index-title-s{
+  font-size: 14px;
+  padding: 15px;
+  position: relative;
+}
+.index-title-s view{
+  position: absolute;
+  left: 13px;
+  bottom: 18px;
+  width: 60px;
+  height: 3px;
+  background: rgba(1, 64, 153,.5);
+  border-radius: 3px;
+}
+.index-big{
+  font-size: 12px;
+  padding: 15px;
+}
+.index-big text{
+  font-size: 30px;
+  color: #014099;
+  font-weight: 600;
+}
+
+
 
 .content-panel{
-  padding: 15px 20px;
+  padding: 15px;
   position: relative;
-  margin-bottom: 15px;
+  margin: 15px 0;
   background: rgba(255,255,255,.8);
+}
+.content-panel image{
+  width: 100%;
+  vertical-align: bottom;
 }
 .content-title{
   font-size: 18px;
@@ -63,11 +122,10 @@ page{
   margin: 0 0 10px 0;
 }
 .content-tips{
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 10px;
+  color: #888;
 }
-
-
 .btn-submit{
   background: #014099;
   line-height: 100rpx;
@@ -114,9 +172,6 @@ page{
 
 /* table css */
 .tableView{
-  border:1px solid #000;
-  border-right:0;
-  border-bottom: 0;
   width: 100%;
 }
 /* 表头 */
@@ -126,7 +181,7 @@ page{
   display:-webkit-flex;
   justify-content: space-between; /* 项目位于各行之间留有空白的容器内。 */
   width: 100%;
-  font-size: 32rpx;
+  font-size: 13px;
   text-align: center;
 } 
 .th{
@@ -137,8 +192,8 @@ page{
   justify-content: center;
   width: 25vw;
   height: 70rpx;
-  border-bottom: 1px solid #000;
-  border-right: 1px solid #000;
+  /* border-bottom: 1px solid #000;
+  border-right: 1px solid #000; */
 }
 /* 表格cell */
 .table_cell{
@@ -147,7 +202,7 @@ page{
   display:-webkit-flex;
   justify-content: space-between; /* 项目位于各行之间留有空白的容器内。 */
   width: 100%;
-  font-size: 32rpx;
+  font-size: 13px;
   color: #330e0e;
   text-align: center;
 }
@@ -159,13 +214,18 @@ page{
   justify-content: center;
   width: 25vw;
   height: 70rpx;
-  border-bottom: 1px solid #000;
-  border-right: 1px solid #000;
-} 
-.line-through{
-  text-decoration: line-through #ff4444 solid;
+  /* border-bottom: 1px solid #000;
+  border-right: 1px solid #000; */
 }
-
+.line-through{
+  text-decoration: line-through;
+}
+.th,.td{
+  border-left: 1rpx dashed rgba(153, 153, 153,.6);
+}
+.th:first-child,.td:first-child{
+  border: 0;
+}
 .content-flex{
   display: flex;
   display:-webkit-box;
@@ -173,9 +233,12 @@ page{
   justify-content: space-around;
   margin-bottom: 20px;
 }
+.content-flex:last-child{
+  margin-bottom: 0;
+}
 .content-flex-left{
-  width: 70px;
-  font-size: 13px;
+  width: 60px;
+  font-size: 11px;
 }
 .content-flex-right{
   flex: 1;
@@ -186,7 +249,7 @@ page{
   border: 1rpx solid #353535;
   text-align: center;
   border-radius: 10px;
-  line-height: 24px;
+  line-height: 20px;
   margin-top: 2px;
 }
 
@@ -204,4 +267,81 @@ page{
 .weui-grid__icon{
   width: 40px;
   height: 40px;
+}
+
+/* 时间轴 */
+.process-line{
+}
+.dot-line{
+  position: relative;
+  padding: 5px 0;
+  height: 30px;
+}
+.dot-line .line{
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  background: rgba(77, 143, 236,.4);
+  left: calc(50% - 2px);
+  top: 0;
+}
+.dot-hollow{
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: calc(50% - 5px);
+  top: calc(50% - 5px);
+  background: rgba(255,255,255,0);
+  border-radius: 50%;
+  box-sizing: border-box;
+  z-index: 1;
+  box-shadow: 0px 0px 5px #4d8fec;
+}
+.dot-hollow.active{
+  background: #fff;
+  border: 1px solid #4d8fec;
+  padding: 3px;
+  width: 16px;
+  height: 16px;
+  left: calc(50% - 8px);
+  top: calc(50% - 8px);
+}
+.dot-hollow .dot-solid{
+  width: 100%;
+  height: 100%;
+  background: #4d8fec;
+  border-radius: 50%;
+}
+.process-menu{
+  position: absolute;
+  top: calc(50% - 14px);
+  font-size: 12px;
+  line-height: 24px;
+  width: 100px;
+  text-align: center;
+  color: #fff;
+  background: #4d8fec;
+  border-radius: 5px;
+}
+.process-menu.left{
+  right: calc(50% + 40px);
+}
+.process-menu.right{
+  left: calc(50% + 40px);
+}
+.process-menu .arrow{
+  position: absolute;
+  top: 7px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 2px solid transparent;
+}
+.process-menu.left .arrow{
+  border-left: 16px solid #4d8fec;
+  right: -15px;
+}
+.process-menu.right .arrow{
+  border-right: 16px solid #4d8fec;
+  left: -15px;
 }

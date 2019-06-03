@@ -45,7 +45,7 @@
                     </block>
                   </radio-group> 
                 </view>
-                <view class="typeContainer" wx:if="{{checkedServiceType == '0'}}">
+                <!-- <view class="typeContainer" wx:if="{{checkedServiceType == '0'}}">
                   <view class='typeTitle'>布草清洗方式</view>
                   <radio-group bindchange="cleanChange" name="hl_clean_type_code">
                     <label class='clean-label'>
@@ -62,9 +62,9 @@
                       <view style='width: 100%;'><input class="weui-input" name="hl_location" value='{{form.hl_location}}' placeholder='请填写布草领取地址'  /></view>
                     </label>
                   </radio-group> 
-                </view>
+                </view> -->
                 <view class="typeContainer" wx:if="{{checkedServiceType == '1'}}">
-                  <view class='typeTitle'>布草数量</view>
+                  <view class='typeTitle'>布草数量<view>* 已对双井、四惠、百子湾、三里屯地区开放</view></view>
                   <view class='stepperContainer stepList' wx:for="{{setpList}}" wx:key="{{item.steplength}}">
                     <view>{{item.steplength}}</view>
                     <view class='stepper'>
@@ -92,19 +92,19 @@
                 <view class="weui-media-box__title weui-media-box__title_in-text">备注</view>
                 <view class="weui-media-box__desc">
                   <view class="weui-cell__bd remark">
-                    <textarea wx:if='{{!multiShow}}' class="weui-textarea" placeholder="还有特别要求？" value='{{form.remark}}' maxlength='200' auto-height="true" bindinput='textareaChange' name='remark' bindblur="ifshowArea" data-show="yes" focus="true" />
-                    <view wx:if="{{multiShow}}" class="weui-textarea weui-textarea-view" style='color:{{areatext=="还有特别要求？"?"#888":"#353535"}};height:{{textareaHeight}}px;' data-show="no" bindtap="ifshowArea">{{areatext}}</view>
+                    <textarea wx:if='{{!multiShow}}' class="weui-textarea" placeholder="还有什么需要跟阿姨特别嘱咐的？" value='{{form.remark}}' maxlength='200' auto-height="true" bindinput='textareaChange' bindblur="ifshowArea" data-show="yes" focus="true" />
+                    <view wx:if="{{multiShow}}" class="weui-textarea weui-textarea-view" style='color:{{areatext=="还有什么需要跟阿姨特别嘱咐的？"?"#888":"#353535"}};height:{{textareaHeight}}px;' data-show="no" bindtap="ifshowArea">{{areatext}}</view>
                     <view class="weui-textarea-counter">{{textCount}}/200</view>
                   </view>
                 </view>
-                <view class='checkBox'>
+                <view class='checkBox' hidden='true'>
                   <radio-group bindchange="checkboxChange" name="sla">
                     <label class="weui-cell weui-check__label">
                       <view class="weui-cell__hd weui-check__hd_in-checkbox">
                           <image src='../../images/check.png' class="checkImage {{checkboxChecked? 'checked' : ''}}"></image>
                       </view>
-                      <radio value="0" />
-                      <view class="weui-cell__bd">已阅读并同意<view class='inline'>《麦极服务协议》</view></view>
+                      <radio value="0" checked='{{checkboxChecked}}' />
+                      <view class="weui-cell__bd">已阅读并同意<view class='inline' bindtap='toSla'>《麦极服务协议》</view></view>
                     </label>
                   </radio-group> 
                   <!-- <checkbox-group bindchange="checkboxChange" name='check'>
@@ -122,7 +122,7 @@
         </view>
     </view>
     <view hidden='true'>
-      <input name="remark" value='{{areatext}}'></input>
+      <input name="remark" value='{{form.remark}}'></input>
       <input class="weui-input" name="house_id" value='{{formData.id}}' ></input>
       <input class="weui-input" name="mobile" value='{{formData.contact_mobile}}' ></input>
     </view>
@@ -138,7 +138,8 @@
       <text class='tipsPrice'>(体验价)</text>
       <view class="pay-arrow {{showArrow?'active':''}}"></view>
     </view>
-    <button class='btn-pay' formType="submit" wx:if="{{showPrice}}">去支付</button>
+    <button class="btn-pay {{toPayFirst?'':'disabled'}}" formType="{{toPayFirst?'submit':''}}" wx:if="{{showPrice}}" >去支付</button>
+    <!--  disabled="{{toPayFirst}}" -->
     <button class='btn-pay disabled' wx:else>去支付</button>
   </view>
 </view>
@@ -160,22 +161,34 @@
 <view class="zan-dialog {{ showDialog ? 'zan-dialog--show' : '' }}">
   <view class="zan-dialog__mask" bindtap="toggleDialog" />
   <view class="zan-dialog__container" wx:if="{{showDialogData}}">
-    <scroll-view scroll-x='true' class='date-scroll' style="width: 100%;">
-      <view class="date-item {{item.isSelect?'active':''}}" wx:for="{{dialogData}}" wx:key="*this" bindtap='dateChange' data-id = "{{item.date}}">
-        <view class='date-name'>{{item.date_week}}</view>
-        <view class='date-date'>{{item.date_id}}</view>
-      </view>
-    </scroll-view>
-    <view class='date-container' wx:for="{{dialogData}}" wx:key='{{item.date}}' wx:if="{{item.date == curDate}}">
-      <view class="date-times">
-        <view class="date-time {{item.is_full?'disabled':''}} {{item.isSelect? 'active':'' }}" wx:for="{{item.alive_time}}" wx:key="{{item.time}}" data-time='{{item.time}}' data-date='{{curDate}}' bindtap="{{item.is_full? '': 'timeChoose'}}">
-          <view>{{item.time}}</view>
+    <!-- <form bindsubmit="confirmChoose"> -->
+      <scroll-view scroll-x='true' class='date-scroll' style="width: 100%;">
+        <!-- <radio-group bindchange="dateChange" class="date-radio-group" name="date">
+          <label class="weui-cell weui-check__label" wx:for="{{dialogData}}" wx:key="{{item.date}}" data-id = "{{item.date}}">
+            <radio class="weui-check" value="{{item.date}}" checked="{{curDate == item.date }}"/>
+            <view class="date-item {{curDate == item.date?'active':''}}">
+              <view class='date-name'>{{item.date_week}}</view>
+              <view class='date-date'>{{item.date_id}}</view>
+            </view>
+          </label>
+        </radio-group> -->
+        <view class="date-item {{curDate == item.date?'active':''}}" wx:for="{{dialogData}}" wx:key="*this" bindtap='dateChange' data-id = "{{item.date}}">
+          <view class='date-name'>{{item.date_week}}</view>
+          <view class='date-date'>{{item.date_id}}</view>
         </view>
+        <!-- <input value='{{form.service_date}}' name='date' hidden=''></input> -->
+      </scroll-view>
+      <view class='date-container' wx:for="{{dialogData}}" wx:key='{{item.date}}' wx:if="{{item.date == curDate}}">
+        <view class="date-times">
+          <view class="date-time {{item.is_full?'disabled':''}} {{curTime == item.time? 'active':'' }}" wx:for="{{item.alive_time}}" wx:key="{{item.time}}" data-time='{{item.time}}' data-date='{{curDate}}' bindtap="{{item.is_full? '': 'timeChoose'}}">
+            <view>{{item.time}}</view>
+          </view>
+        </view>
+        <view class='date-tips'>*12:00~14:00为高峰时间段，建议您错峰预约</view>
+        <view class='date-btn' bindtap='confirmChoose' data-date="{{curDate}}" data-time="{{curTime}}">确定选择</view>
+        <!-- <button class='date-btn' form-type="submit">确定选择</button> -->
       </view>
-      <view class='date-tips'>*12:00~14:00为高峰时间段，建议您错峰预约</view>
-      <view class='date-btn' bindtap='confirmChoose' data-date="{{curDate}}" data-time="{{curTime}}">确定选择</view>
-    </view>
-
+    <!-- </form> -->
   </view>
   <view class="zan-dialog__container" wx:else>
     <view class='weui-loading loadingDialog dialogNone' wx:if="{{showDialogLoading}}">

@@ -1,0 +1,51 @@
+.page-state-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.page-state-container {
+  animation: fadein 2s 1 ease-out;
+  height: 100%;
+  width: 100%;
+}
+.loading-bg{
+  width: 70px;
+  height: 70px;
+  background: rgba(0, 0, 0, .5);
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+}
+.loading-bg .message{
+  color: #fff;
+  line-height: 30px;
+}
+.weui-loading{
+  width: 50px;
+  height: 50px;
+}
+.order-none{
+  width: 100px;
+}
+.message{
+  line-height: 40px;
+  font-size: 14px;
+}
+.retrybtn{
+  color: #E64340;
+  font-size: 14px;
+  line-height: 40px;
+}
+.page-state-container~view {
+  display: none;
+}
+
+page {
+  height: 100%;
+  overflow-y: auto;
+}

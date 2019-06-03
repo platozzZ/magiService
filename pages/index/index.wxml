@@ -1,45 +1,123 @@
-<!-- <navbar title="麦极服务"></navbar> -->
-<!-- <view class="container" style="top: {{containerTop}}px; height: {{containerHeight}}px"> -->
+
 <view class="container">
-  <scroll-view class='scroll' scroll-y >
-    <view class='banner'>
-      <image class='bgImages' mode="widthFix" src="../../images/bg.jpg"></image>
-      <image class='logo' mode="widthFix" src='../../images/logo.png'></image>
+  <!-- <scroll-view class='scroll' scroll-y > -->
+    <view class='banner' style='height:{{imgHeight}}px'>
+      <!-- <image class='bgImages' mode="widthFix" src="../../images/bg.jpg"></image>
       <view class='text'>
         <view class='banner-title'>省心做民宿</view>
         <view class='banner-text'>卫生死角全覆盖，30+项服务标准</view>
         <view class='banner-text'>房主省心，房客舒心</view>
-      </view>
+      </view> -->
+      <swiper indicator-dots="true" autoplay="true" circular="true" class='swiper'>
+        <block wx:for="{{swiperList}}" wx:key="{{item.url}}">
+          <swiper-item>
+            <image class='logo' mode="widthFix" src='../../images/logo.png'></image>
+            <image src="{{item.url}}" class="bgImages" mode='widthFix' height="{{imgHeight}}px" />
+            <!-- <view class='text'>
+              <view class='banner-title'>{{item.title}}</view>
+              <view class='banner-text'>{{item.text1}}</view>
+              <view class='banner-text'>{{item.text2}}</view>
+            </view> -->
+          </swiper-item>
+        </block>
+      </swiper>
     </view>
-    <view class='content'>
-      <view class='content-panel'>
-        <view class='content-title'>最有竞争力的服务价格</view>
-        <view class='content-section'>
-          <view class="tableView">
-            <view class="table_header">
-              <view class="th"> </view>
-              <view class="th">一居室</view>
-              <view class="th">二居室</view>
-              <view class="th">三居室</view>
-            </view>
-            <view class="table_cell">
-              <view class="td">标准价格</view>
-              <view class="td line-through">￥50</view>
-              <view class="td line-through">￥70</view>
-              <view class="td line-through">￥90</view>
-            </view>
-            <view class="table_cell">
-              <view class="td">体验价格</view>
-              <view class="td">￥39</view>
-              <view class="td">￥59</view>
-              <view class="td">￥79</view>
-            </view>
+    <view class='index'>
+      <view class='index-panel white'>
+        <view class='index-title'><view></view>最有竞争力的服务价格</view>
+        <view class='index-title-s'><view></view>田螺姑娘（精选保洁）</view>
+        <view class="tableView">
+          <view class="table_header">
+            <view class="th"> </view>
+            <view class="th">一居室</view>
+            <view class="th">二居室</view>
+            <view class="th">三居室</view>
           </view>
-          <view class='content-tips'>现在下单，享受体验价格！</view>
+          <view class="table_cell">
+            <view class="td">市场价格</view>
+            <view class="td line-through">¥50</view>
+            <view class="td line-through">¥70</view>
+            <view class="td line-through">¥90</view>
+          </view>
+          <view class="table_cell">
+            <view class="td">麦极价格</view>
+            <view class="td">¥39</view>
+            <view class="td">¥59</view>
+            <view class="td">¥79</view>
+          </view>
+        </view>
+        <view class='index-title-s'><view></view>甩手掌柜（精选保洁+五星布草）</view>
+        <view class="tableView">
+          <view class="table_header">
+            <view class="th"> </view>
+            <view class="th">一居室</view>
+            <view class="th">二居室</view>
+            <view class="th">三居室</view>
+          </view>
+          <view class="table_cell">
+            <view class="td">市场价格</view>
+            <view class="td line-through">¥70</view>
+            <view class="td line-through">¥110</view>
+            <view class="td line-through">¥150</view>
+          </view>
+          <view class="table_cell">
+            <view class="td">麦极价格</view>
+            <view class="td">¥58</view>
+            <view class="td">¥95</view>
+            <view class="td">¥130</view>
+          </view>
+        </view>
+        <view class='content-tips'>
+          <view>*三套以上的布草也请放心下单哦~</view>
+          <view>*布草服务需要缴纳相应的布草保证金</view>
+        </view>
+      </view>
+      
+      <view class='index-panel'>
+        <view class='index-title'><view></view>严格执行的服务标准</view>
+        <view class='index-big'><text>30+</text> 超过30项服务标准，保障服务质量</view>
+        <view class='content-section'>
+          <block wx:for="{{standardData}}" wx:key='{{item.title}}'>
+            <view class='content-flex'>
+              <view class='content-flex-left'><view class='content-capsule'>{{item.title}}</view></view>
+              <view class='content-flex-right'>
+                <view wx:for="{{item.list}}" wx:for-item="list" wx:key='{{list.text}}'>{{list.text}}</view>
+              </view>
+            </view>
+          </block>
         </view>
       </view>
 
+      <view class='index-panel white'>
+        <view class='index-title'><view></view>细致高效的服务流程</view>
+        <view class='index-big'>麦极总结归纳了「民宿」「酒店」「家居保洁」三个行业的服务经验，形成了麦极专有的的服务流程，保证快速细致的为您服务</view>
+        <view class='content-section'>
+          <block wx:for="{{processList}}" wx:key="{{item.title}}">
+            <view class='process-line'>
+              <view class='dot-line'>
+                <view class='dot-hollow'><view class='dot-solid'></view></view>
+                <view class='line'></view>
+                <view class='process-menu {{item.left? "left":"right"}}'>
+                  <view class='arrow'></view>
+                  {{item.title}}
+                </view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+
+
+
+    </view>
+    <view class='content'>
+      <!-- <view class='content-panel'>
+        <image mode="widthFix" src="../../images/price.jpg"></image>
+      </view>
       <view class='content-panel'>
+        <image mode="widthFix" src="../../images/process.jpg"></image>
+      </view> -->
+      <!-- <view class='content-panel'>
         <view class='content-title'>行业最严格的服务标准</view>
         <view class='content-section'>
           <block wx:for="{{standardData}}" wx:key='{{item.title}}'>
@@ -67,24 +145,9 @@
           </view>
           <view class='content-tips'>不放过每一个死角，保证服务质量</view>
         </view>
-      </view>
+      </view> -->
     </view>
-
-  <!-- <scroll-view class='scroll' scroll-y lower-threshold="50" bindscrolltolower="scrollLoading"> -->
-    <!-- <block wx:for="{{art}}" wx:key="{{index}}" data-index = "{{index}}">
-      <view class='weui-panel'>
-        <view class="weui-cells weui-cells_after-title">
-            <view bindtap='toOrder' class="weui-cell weui-cell_access" hover-class="weui-cell_active" data-index = '{{index}}'>
-              <view class="weui-cell__bd">{{item.address}}</view>
-              <view class="weui-cell__ft weui-cell__ft_in-access">下单</view>
-            </view>
-        </view>
-      </view>
-    </block> -->
-    <!-- <navigator class='myOrder' url='../orderList/orderList?showHome=false'>我的订单</navigator> -->
-  
-  
-  </scroll-view>
+  <!-- </scroll-view> -->
   <!-- <view class='btn-submit' bindtap='onekeyOrder' hover-class='navigator-hover'>立即下单</view> -->
 </view>
 <movable-area style="width:{{screenWidth}}px;height:{{screenHeight}}px;position: fixed;top:0;left:0;pointer-events: none;">

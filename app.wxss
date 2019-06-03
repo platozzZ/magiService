@@ -1,4 +1,5 @@
 @import 'style/weui.wxss';
+@import 'components/pagestate/index.wxss';
 /* @import "dist/common/index.wxss"; */
 
 page{

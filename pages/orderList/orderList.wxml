@@ -1,4 +1,6 @@
 <wxs module="filters" src="../../utils/addmul.wxs"></wxs>
+<!-- <import src="/components/pagestate/index.wxml" />
+<template is="pageState" data="{{...pageState}}" /> -->
 <view class="container" wx:if="{{art.length > 0}}">
   <!-- <scroll-view class='scroll' scroll-y="true" lower-threshold="50" bindscrolltolower="scrollLoading"> -->
     <block wx:for='{{art}}' wx:key="{{item.id}}">
@@ -24,8 +26,8 @@
         <view class="weui-form-preview__ft btn-container" hidden='{{item.status == 3}}'>
           <view class='pay-tips'><text wx:if="{{item.status == 0}}">请于 {{item.expireTime}} 之前支付</text></view>
           <view class='pay-container'>
-            <view class='btn' catchtap='toCancel' data-date = "{{item.service_date}}" data-time = "{{item.service_time}}" data-id='{{item.id}}' wx:if="{{item.status == 0 || item.status == 1}}">取消订单</view>
-            <view class='btn' catchtap='toPay' data-id='{{item.id}}' wx:if="{{item.status == 0}}">去支付</view>
+            <view class='btn' catchtap='toCancel' data-date = "{{item.service_date}}" data-time = "{{item.service_time}}" data-status="{{item.status}}" data-id='{{item.id}}' wx:if="{{item.status == 0 || item.status == 1}}">取消订单</view>
+            <view class="btn {{toPayFirst?'' : 'payNo'}}" catchtap="{{toPayFirst?'toPay' : ''}}" data-id='{{item.id}}' wx:if="{{item.status == 0}}">去支付</view>
             <view class='btn' catchtap='toAgain' data-houseid="{{item.house_id}}" data-index='{{index}}' wx:if="{{item.status == 2 || item.status == 1}}">再来一单</view>
             <view class='btn' catchtap='openActionSheet' wx:if="{{item.status == 6}}">联系客服</view>
             <view class='cancelled' data-id='{{item.id}}' wx:if='{{item.status == 4 ||item.status == 5||item.status == 6}}'>{{item.payStatus}}</view>
@@ -40,6 +42,6 @@
   <!-- </scroll-view> -->
 </view>
 <view class='orderList-no' wx:else>
-  <image src='../../images/order-none.png' class='order-none' mode='aspectFill'></image>
+  <image src='../../images/order-none.png' class='order-none' mode='widthFix'></image>
   <view>您还没有订单</view>
 </view>

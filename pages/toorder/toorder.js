@@ -10,11 +10,11 @@ Page({
     curTime: '',
     times: [],
     serviceTypeArr: [
-      { text: '田螺姑娘', value: '0' },
-      { text: '甩手掌柜', value: '1' }
+      { text: '田螺姑娘', value: '0', title: '田螺姑娘(保洁)' },
+      { text: '甩手掌柜', value: '1', title: '甩手掌柜(保洁+布草)' }
     ],
     checkedServiceType: '',
-    checkboxChecked: false,
+    checkboxChecked: true,
     cleanValue: '',
     minusStatus: '',
     setpList: [
@@ -29,7 +29,7 @@ Page({
     showDialogLoading: true,
     dialogData: [],
     textCount: 0,
-    areatext: '还有特别要求？', 
+    areatext: '还有什么需要跟阿姨特别嘱咐的？', 
     multiShow: true,
     textareaHeight: 68,
     change: false,
@@ -37,6 +37,7 @@ Page({
     showAmountDialog: false,
     hasAddress: false,
     houseInfo: '',
+    toPayFirst: true,
     form: {
       house_id: '',
       house_type_code: '',//  房型0: 1室 1: 两室 2: 三室
@@ -97,18 +98,16 @@ Page({
   toggleDialog(e) {
     console.log(e)
     let that = this
-    let date = that.data.curDate
     let formData = that.data.formData
-    let dialogData = that.data.dialogData
-    let curTime = e.currentTarget.dataset.time
-    console.log(curTime)
     if (!formData){
       that.showToast('请选择房源地址')
     } else {
+      let dialogData = that.data.dialogData
+      let curDate = that.data.curDate
       that.setData({
+        curDate: curDate ? curDate: dialogData[0].date,
         showDialog: !that.data.showDialog,
       })
-
     }
   },
   serviceTypeChange(e) {
@@ -155,28 +154,15 @@ Page({
       that.showToast(error.msg)
       return false
     } else {
-      if (data.service_type_code == 0) {
-        if (!data.hl_clean_type_code) {
-          that.showToast('请选择布草清洗方式')
-        } else {
-          if (data.hl_clean_type_code == '1' && !data.hl_location) {
-            that.showToast('请填写布草领取地址')
-          } else if (!that.data.checkboxChecked) {
-            that.showToast('请阅读并同意《麦极服务协议》')
-          } else {
-            console.log('111')
-            that.pay(data)
-          }
-        }
-      } else if (data.service_type_code == 1) {
-        if (data.hl_specs15 == '0' && data.hl_specs18 == '0') {
-          that.showToast('请至少选择一套布草')
-        } else if (!that.data.checkboxChecked){
-          that.showToast('请阅读并同意《麦极服务协议》')
-        } else {
-          console.log('222')
-          that.pay(data)
-        }
+      if (data.service_type_code == 1 && data.hl_specs15 == '0' && data.hl_specs18 == '0') {
+        that.showToast('请至少选择一套布草')
+        return false
+      }
+      if (that.data.toPayFirst) {
+        that.pay(data)
+        that.setData({
+          toPayFirst: false
+        })
       }
     }
   },
@@ -216,12 +202,17 @@ Page({
     })
   },
   pay(data) {
-    console.log(data) 
-    let that = this
+    setTimeout(function () {
+      that.setData({
+        toPayFirst: true
+      })
+    }, 1500); 
     wx.showLoading({
       title: '加载中',
       mask: true
     })
+    console.log(data) 
+    let that = this
     api.request('/fuwu/order/add.do', 'POST', app.globalData.token, data).then(res => {
       console.log('pay:', res.data);
       wx.hideLoading()
@@ -235,23 +226,29 @@ Page({
           paySign: payData.data.paySign,
           success(res) {
             wx.hideLoading()
-            console.log(res)
+            console.log('pay-success:',res)
             wx.switchTab({
-              url: '../orderList/orderList'
+              url: '../orderList/orderList',
+              success(e) {
+                let page = getCurrentPages().pop();
+                if (page == undefined || page == null) return;
+                page.onLoad();
+              }
             })
           },
           fail(res) {
             wx.hideLoading()
-            console.log(res)
-            wx.showModal({
-              title: '提示',
-              showCancel: false,
-              content: '支付失败',
-            })
+            console.log('pay-fail:',res)
+            that.showToast('支付失败')
+            // wx.showModal({
+            //   title: '提示',
+            //   showCancel: false,
+            //   content: '支付失败',
+            // })
             wx.switchTab({
               url: '../orderList/orderList',
-              success: function (e) {
-                var page = getCurrentPages().pop();
+              success(e) {
+                let page = getCurrentPages().pop();
                 if (page == undefined || page == null) return;
                 page.onLoad();
               }
@@ -262,38 +259,36 @@ Page({
           }
         })
       } else {
-        console.log('payData:', payData)
+        console.log('pay-codeFail:', payData)
         wx.hideLoading()
         that.showToast(payData.rlt_msg)
-        wx.switchTab({
-          url: '../orderList/orderList',
-          success: function (e) {
-            var page = getCurrentPages().pop();
-            if (page == undefined || page == null) return;
-            page.onLoad();
-          }
-        })
+        // wx.switchTab({
+        //   url: '../orderList/orderList',
+        //   success(e) {
+        //     let page = getCurrentPages().pop();
+        //     if (page == undefined || page == null) return;
+        //     page.onLoad();
+        //   }
+        // })
       }
     }).catch(res => {
+      wx.hideLoading()
       console.log('pay-fail:', res);
     }).finally(() => { })
   },
-  dateChange(event) {
-    console.log(event);
+  dateChange(e) {
+    console.log(e);
     let that = this
-    let id = event.currentTarget.dataset.id;
-    let data = that.data.dialogData
-    for (let i = 0; i < data.length; i++) {
-      if (id == data[i].date) {
-        data[i].isSelect = true;
-      } else {
-        data[i].isSelect = false;
-      }
+    let id = e.currentTarget.dataset.id;
+    if (id != that.data.curDate) {
+      that.setData({
+        curTime: ''
+      });
     }
     that.setData({
-      dialogData: data,
-      curDate: id
+      curDate: id,
     });
+    
   },
   timeChoose(e){
     console.log(e)
@@ -301,23 +296,24 @@ Page({
     let dialogData = that.data.dialogData
     let date = e.currentTarget.dataset.date
     let time = e.currentTarget.dataset.time
-    dialogData.map((item,index,arr) => {
-      if(item.date == date){
-        item.alive_time.map((item,index,arr) => {
-          if (time == item.time) {
-            item.isSelect = true
-          } else {
-            item.isSelect = false
-          }
-        })
-      } else {
-        item.alive_time.map((item, index, arr) => {
-          item.isSelect = false
-        })
-      }
-    })
+    // dialogData.map((item,index,arr) => {
+    //   if(item.date == date){
+    //     item.alive_time.map((item,index,arr) => {
+    //       if (time == item.time) {
+    //         item.isSelect = true
+    //       } else {
+    //         item.isSelect = false
+    //       }
+    //     })
+    //   } else {
+    //     item.alive_time.map((item, index, arr) => {
+    //       item.isSelect = false
+    //     })
+    //   }
+    // })
     that.setData({
-      dialogData: dialogData,
+      // dialogData: dialogData,
+      // curDate: date,
       curTime: time
     })
 
@@ -325,6 +321,7 @@ Page({
   confirmChoose(e){
     console.log(e)
     let that = this
+    let dialogData = that.data.dialogData
     let date = e.currentTarget.dataset.date
     let time = e.currentTarget.dataset.time
     if (!!date && !!time){
@@ -332,8 +329,8 @@ Page({
         'form.service_date': date,
         'form.service_time': time,
         showDialog: false,
-        curDate: date,
-        curTime: time
+        // curDate: date,
+        // curTime: time
       })
     } else {
       wx.showToast({
@@ -365,7 +362,7 @@ Page({
     let t_show = e.currentTarget.dataset.show == "yes" ? true : false;
     if (t_show) {//不显示textarea 
       this.setData({
-        areatext: this.data.form.remark ? this.data.form.remark : "还有特别要求？",
+        areatext: this.data.form.remark ? this.data.form.remark : "还有什么需要跟阿姨特别嘱咐的？",
         multiShow: t_show
       });
     } else {//显示textarea 
@@ -411,12 +408,16 @@ Page({
   },
   onShow() {
     let that = this
+    that.setData({
+      toPayFirst: true
+    })
     let formData = that.data.formData
     let checkedServiceType = that.data.checkedServiceType
     let setpList = that.data.setpList
     console.log(formData)
     let change = that.data.change
     if (!!formData) {
+      console.log(formData)
       that.getTimeOrder(formData.house_type_code)
       // that.getTimeOrder()
       that.getAmount(formData.id, checkedServiceType, setpList[0].steppernum, setpList[1].steppernum)
@@ -427,6 +428,8 @@ Page({
         // form: formData
       })
     }
+
+    console.log(that.data)
   },
   initValidate() {
     // 验证字段的规则
@@ -446,6 +449,9 @@ Page({
       },
       open_door_remark: {
         required: true,
+      },
+      sla: {
+        required: true,
       }
     }
     const messages = {
@@ -464,6 +470,9 @@ Page({
       },
       open_door_remark: {
         required: '请输入开门密码或者钥匙存放位置',
+      },
+      sla: {
+        required: '请阅读并同意《麦极服务协议》',
       }
     }
     // 创建实例对象
@@ -480,21 +489,20 @@ Page({
       if (res.data.rlt_code == "S_0000"){
         let dialogData = res.data.data
         dialogData.map((item, index, arr) => {
-          item.isSelect = false
+          // item.isSelect = false
           item.date_id = util.formatWords(new Date(item.date))
           item.date_week = util.formatWeeks(new Date(item.date))
           if (index == 0) {
-            item.isSelect = true
+            // item.isSelect = true
             item.date_week = '明天'
           }
-          item.alive_time.map((item,index,arr) => {
-            item.isSelect = false
-          })
+          // item.alive_time.map((item,index,arr) => {
+          //   item.isSelect = false
+          // })
         })
         console.log(dialogData)
         that.setData({
           dialogData: dialogData,
-          curDate: dialogData[0].date,
         })
         setTimeout(function () {
           that.setData({
@@ -535,6 +543,8 @@ Page({
       console.log('getHouseInfo:', res.data);
       if (res.data.rlt_code == 'S_0000') {
         let houseInfo = res.data.data
+        that.getTimeOrder(houseInfo.house_type_code)
+        that.getAmount(houseInfo.id, that.data.checkedServiceType, that.data.setpList[0].steppernum, that.data.setpList[1].steppernum)
         that.setData({
           formData: houseInfo,
           hasAddress: true,
@@ -560,6 +570,11 @@ Page({
       showDialogLoading: true
     })
     that.getTimeOrder(formData.house_type_code)
+  },
+  toSla(){
+    wx.navigateTo({
+      url: '../sla/sla',
+    })
   },
   onShareAppMessage: function () {
 

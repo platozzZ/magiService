@@ -16,6 +16,15 @@ Page({
     })
     console.log(that.switchHouseType('0'))
     that.getOrderDetail(options.order_id)
+    if (options.detail == '1'){
+      let pages = getCurrentPages();
+      let currPage = pages[pages.length - 1]; //当前页面
+      let prevPage = pages[pages.length - 2]; //上上一个页面
+      console.log(prevPage)
+      prevPage.setData({
+        refresh: false
+      })
+    }
   },
   getOrderDetail(e){
     let that = this

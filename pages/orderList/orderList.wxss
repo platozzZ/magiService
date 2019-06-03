@@ -65,18 +65,22 @@ page{
   border: 1rpx solid #014099;
   color: #014099;
   border-radius: 3px;
-  line-height: 20px;
+  line-height: 22px;
   text-align: center;
-  width: 50px;
-  font-size: 10px;
+  width: 60px;
+  font-size: 12px;
   margin-left: 10px;
+}
+.btn.payNo{
+  color: #888;
+  border-color: #888;
 }
 .pay-container{
   display:flex;
   display:-webkit-flex;
 }
 .cancelled{
-  font-size: 10px;
+  font-size: 12px;
   color: #888;
   margin-left: 10px;
 }
@@ -97,16 +101,21 @@ page{
 }
 
 .orderList-no{
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 100px;
-  height: 100px;
-  margin: -100px 0 0 -50px;
-  font-size: 14px;
-  text-align: center;
-  color: #888;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+  
 }
 .order-none{
-  width: 100px;
+  width: 120px;
+  height: 120px;
+}
+.orderList-no view{
+  color: #888;
+  line-height: 40px;
+  font-size: 14px;
 }
