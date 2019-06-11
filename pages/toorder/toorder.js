@@ -183,8 +183,9 @@ Page({
       }
     }
     console.log(data)
-    api.request('/fuwu/order/amount.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/order/amount.do', 'POST', data).then(res => {
       console.log('getAmount:', res.data);
+      // wx.hideLoading()
       let art = res.data
       if (art.rlt_code == "S_0000"){
         // if (art.data.orderFavorableAmount == art.data.orderRetailAmount){
@@ -197,7 +198,8 @@ Page({
         })
       }
     }).catch(res => {
-      console.log('pay-fail:', res);
+      // wx.hideLoading()
+      console.log('getAmount-fail:', res);
     }).finally(() => {
     })
   },
@@ -207,15 +209,11 @@ Page({
         toPayFirst: true
       })
     }, 1500); 
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     console.log(data) 
     let that = this
-    api.request('/fuwu/order/add.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/order/add.do', 'POST', data).then(res => {
       console.log('pay:', res.data);
-      wx.hideLoading()
+      // wx.hideLoading()
       let payData = res.data
       if (payData.rlt_code == 'S_0000') {
         wx.requestPayment({
@@ -237,7 +235,7 @@ Page({
             })
           },
           fail(res) {
-            wx.hideLoading()
+            // wx.hideLoading()
             console.log('pay-fail:',res)
             that.showToast('支付失败')
             // wx.showModal({
@@ -484,7 +482,7 @@ Page({
     // console.log(e)
     let data = { house_type_code: e }
     console.log(data)
-    api.request('/fuwu/service/can_order_time.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/service/can_order_time.do', 'POST', data).then(res => {
       console.log('getTimeOrder:', res.data);
       if (res.data.rlt_code == "S_0000"){
         let dialogData = res.data.data
@@ -534,12 +532,8 @@ Page({
   },
   getHouseInfo(e) {
     let that = this
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     let data = { house_id: e }
-    api.request('/fuwu/house/info.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/house/info.do', 'POST', data).then(res => {
       console.log('getHouseInfo:', res.data);
       if (res.data.rlt_code == 'S_0000') {
         let houseInfo = res.data.data
@@ -558,7 +552,7 @@ Page({
           formData: ''
         })
       }
-      wx.hideLoading()
+      // wx.hideLoading()
     }).catch(res => {
       console.log('pay-fail:', res);
     }).finally(() => { })

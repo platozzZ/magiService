@@ -1,5 +1,5 @@
-<view class="container" wx:if="{{art.length > 0}}">
-  <scroll-view class='scroll' scroll-y >
+<view class="container" wx:if="{{showContainer}}">
+  <view class='scroll'>
     <view class="weui-panel addressList">
       <radio-group bindchange="changeRadio">
         <radio class="deposit-radio" data-index="{{index}}" data-id="{{item.id}}" wx:for="{{art}}" wx:key="*this"   value="{{item.id}}" checked="{{item.checked}}" color='#014099' bindtap='chooseAddress'>
@@ -30,7 +30,7 @@
       </radio-group>
         
     </view>
-  </scroll-view>
+  </view>
   <view class="address-yes" bindtap="showModal" data-id='{{house_id}}' hidden='{{!house_id}}'>不再需要甩手掌柜服务</view>
 </view>
-<view class="deposit-no" wx:else>您未开通甩手掌柜服务</view>
+<view class="deposit-no" wx:if="{{showBtn}}">您未开通甩手掌柜服务</view>

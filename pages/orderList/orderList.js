@@ -1,7 +1,6 @@
 const app = getApp()
 const api = require('../../utils/request.js')
 const util = require('../../utils/util.js')
-// import pagestate from '../../components/pagestate/index.js'
 Page({
   data: {
     art: [],
@@ -9,36 +8,31 @@ Page({
       current_page: 1,
       page_size: 20
     },
+    total_page: '',
     kf_mobile: '',
     kf_wechat: '',
-    total_page: '',
     loadMore: false,
-    refresh: true,
+    refresh: false,
     toPayFirst: true,
+    showList: false,
+    showListNone: false
   },
   onLoad: function (options) {
+    console.log('options:', options)
     let that = this
-    that.getMobile()
-    // that.getOrderList(1)
-    console.log(options)
+    that.getOrderList(1)
+    // that.setData({
+    //   refresh: false
+    // })
   },
   getOrderList(i, v) {
     let that = this
-    // const pageState = pagestate(that)
-    // pageState.loading()// 切换为loading状态
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     let datas = {
       current_page: i,
       page_size: 20
     }
-    console.log(datas)
-    api.request('/fuwu/order/list.do', 'POST', app.globalData.token, datas).then(res => {
-      console.log(res.data)
-      wx.hideLoading()
-      // pageState.finish()// 切换为finish状态
+    api.request('/fuwu/order/list.do', 'POST', datas).then(res => {
+      console.log('getOrderList:',res.data)
       if (res.data.rlt_code == 'S_0000') {
         let data = res.data.data.rows
         if(!!data){
@@ -55,6 +49,9 @@ Page({
               ['0_0']: {
                 status: 0,
                 orderStatus: '待支付'
+              }, ['1_1']: {
+                status: 7,
+                orderStatus: '待接单'
               }, ['2_1']: {
                 status: 1,
                 orderStatus: '预约成功'
@@ -84,39 +81,50 @@ Page({
             item.payStatus = actions.payStatus
             return item
           });
-          console.log(art)
           that.setData({
             art: art,
             total_page: res.data.data.total_page,
-            'pages.current_page': res.data.data.current_page
+            'pages.current_page': res.data.data.current_page,
+            showList: true,
+            showListNone: false
           })
           
+        } else {
+          that.setData({
+            art: [],
+            showList: false,
+            showListNone: true
+          })
         }
-        console.log(that.data.art)
-        //  else {
-        //   // pageState.empty()// empty
-        //   // that.setData({
-        //   //   art: [],
-        //   // })
-        // }
       } else {
+        that.setData({
+          showList: false,
+          showListNone: true
+        })
         wx.showToast({
-          title: res.rlt_msg,
+          title: res.data.rlt_msg,
           icon: 'none'
         })
       }
+      wx.stopPullDownRefresh()
     }).catch(res => {
-      wx.hideLoading()
-      // pageState.error()// 切换为error状态
+      // wx.showModal({
+      //   title: '提示',
+      //   content: res,
+      //   success(e){
+      //     if(e.confirm){
+      //       that.onPullDownRefresh()
+      //     }
+      //   }
+      // })
       console.log('getOrderList-fail:', res);
-    }).finally(() => {
-      // console.log('getAddress-finally:', "结束");
-    })
+      wx.stopPullDownRefresh()
+    }).finally(() => {})
   },
   toDetail(e){
     let id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: '../orderDetail/orderDetail?order_id=' + id + '&detail=1',
+      url: '../orderDetail/orderDetail?order_id=' + id ,
     })
   },
   showToast(e) {
@@ -128,12 +136,12 @@ Page({
   },
   toPay(e){
     let that = this
-    if (that.data.toPayFirst){
-      let data = e.currentTarget.dataset.id
-      that.pay(data)
+    if (that.data.toPayFirst) {
       that.setData({
         toPayFirst: false
       })
+      let data = e.currentTarget.dataset.id
+      that.pay(data)
     }
   },
   pay(e) {
@@ -143,15 +151,11 @@ Page({
       })
     }, 1500); 
     console.log(e)
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     let that = this
     let data = { order_id: e}
-    api.request('/fuwu/order/repay.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/order/repay.do', 'POST', data).then(res => {
       console.log('pay:', res.data);
-      wx.hideLoading()
+      // wx.hideLoading()
       let payData = res.data
       if (payData.rlt_code == 'S_0000') {
         wx.requestPayment({
@@ -180,7 +184,7 @@ Page({
         })
       } else {
         console.log('payData:', payData)
-        wx.hideLoading()
+        // wx.hideLoading()
         that.showToast(payData.rlt_msg)
       }
     }).catch(res => {
@@ -235,13 +239,9 @@ Page({
   orderCancel(e){
     let that = this
     let data = { order_id: e }
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
-    api.request('/fuwu/order/cancel.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/order/cancel.do', 'POST', data).then(res => {
       console.log('cancel:', res.data);
-      wx.hideLoading()
+      // wx.hideLoading()
       if (res.data.rlt_code == 'S_0000') {
         that.getOrderList(1)
       } else {
@@ -266,25 +266,18 @@ Page({
     })
   },
   onShow() {
-    console.log('onShow')
     let that = this
+    console.log(that.data.refresh)
     that.setData({
       toPayFirst: true
     })
-    console.log(that.data.refresh)
-    if (that.data.refresh){
+    if (that.data.refresh) {
       that.getOrderList(1)
     } else {
       that.setData({
         refresh: true
       })
     }
-  },
-  onHide(){
-    console.log('onHide')
-  },
-  onUnload() {
-    console.log('onUnload')
   },
   contactUs(e) {
     let that = this
@@ -311,16 +304,16 @@ Page({
     })
   },
   getMobile(e) {
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
+    // wx.showLoading({
+    //   title: '加载中',
+    //   mask: true
+    // })
     let that = this
     // const pageState = pagestate(that)
     // pageState.loading()// 切换为loading状态
     api.request('/fuwu/service/kf_contact', 'POST').then(res => {
       console.log('mobile:', res.data);
-      wx.hideLoading()
+      // wx.hideLoading()
       // pageState.finish()// 切换为finish状态
       if (res.data.rlt_code == 'S_0000') {
         that.setData({
@@ -329,7 +322,7 @@ Page({
         })
       }
     }).catch(res => {
-      wx.hideLoading()
+      // wx.hideLoading()
       // pageState.error()// 切换为error状态
       console.log('mobile-fail:', res);
     }).finally(() => {
@@ -367,7 +360,6 @@ Page({
   },
   onPullDownRefresh() {
     this.getOrderList(1)
-    wx.stopPullDownRefresh()
   },
   onReachBottom() {
     let that = this
@@ -379,9 +371,6 @@ Page({
         loadMore: true
       })
     }
-  },
-  onRetry(){
-    this.onLoad()
   },
   // onShareAppMessage: function (options) {
   //   console.log(options)

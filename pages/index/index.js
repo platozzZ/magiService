@@ -1,5 +1,5 @@
 const app = getApp()
-const api = require('../../utils/request.js')
+// const api = require('../../utils/request.js')
 // var startPoint;
 Page({
   data: {

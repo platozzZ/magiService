@@ -1,6 +1,5 @@
 <form bindsubmit="formSubmit" bindreset="formReset" report-submit="true">  
   <view class="weui-cells weui-cells_after-title addaddress">
-    
     <!-- 联系人 -->
     <view class="weui-cell weui-cell_input">
       <view class="weui-cell__hd">

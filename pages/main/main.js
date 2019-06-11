@@ -37,14 +37,10 @@ Page({
     })
   },
   getData(e) {
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     let that = this
     api.request('/fuwu/service/kf_contact', 'POST').then(res => {
       console.log('kf_contact:', res.data);
-      wx.hideLoading()
+      // wx.hideLoading()
       if (res.data.rlt_code == 'S_0000'){
         that.setData({
           kf_mobile: res.data.data.kf_mobile,
@@ -52,7 +48,7 @@ Page({
         })
       }
     }).catch(res => {
-      wx.hideLoading()
+      // wx.hideLoading()
       console.log('kf_contact-fail:', res);
     }).finally(() => {
       // console.log('getAddress-finally:', "结束");
@@ -73,7 +69,6 @@ Page({
     let that = this
     if (!that.data.kf_mobile || !that.data.kf_wechat) {
       that.getData()
-      return
     } 
     wx.showActionSheet({
       itemList: ['拨打客服电话', '添加客服微信'],

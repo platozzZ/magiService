@@ -12,12 +12,18 @@ Page({
       page_size: 100
     },
     total_page: '',
-    isFirst: true
+    isFirst: true,
+    refresh: false,
+    showContainer: false,
+    showBtn: false,
   },
   onLoad(options) {
     console.log(options)
     let that = this
-    let list = that.data.addressList
+    that.getAddress(options.status)
+    that.setData({
+      addressStatus: options.status,
+    })
     if (options.status == '1'){
       wx.setNavigationBarTitle({
         title: '房源管理',
@@ -30,17 +36,6 @@ Page({
         curId: options.house_id
       })
     }
-    list.map((item, i, arr) => {
-      if (item.house_id == options.house_id){
-        item.checked = true
-      }
-      return item
-    })
-    console.log(list)
-    that.setData({
-      addressList: list,
-      addressStatus: options.status,
-    })
   },
   chooseAddress(e){
     console.log(e)
@@ -112,7 +107,7 @@ Page({
   getDelete(e){
     let that = this
     let data = {house_id: e}
-    api.request('/fuwu/house/delete.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/house/delete.do', 'POST', data).then(res => {
       console.log(res.data)
       if (res.data.rlt_code != 'S_0000'){
         that.showModal(res.data.rlt_msg)
@@ -125,54 +120,69 @@ Page({
     })
   },
   getAddress(e) {
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     let that = this
-    // const pageState = pagestate(that)
-    // pageState.loading()// 切换为loading状态
     let data = that.data.pages
     console.log(data)
-    api.request('/fuwu/house/list.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/house/list.do', 'POST', data).then(res => {
       console.log('getAddress:', res.data);
-      wx.hideLoading()
-      // pageState.finish()// 切换为finish状态
       if (res.data.rlt_code == "S_0000" && !!res.data.data.rows) {
         let art = res.data.data.rows
-        art.map(item => {
-          item.checked = false
-          if (item.id == that.data.curId) {
-            item.checked = true
-          }
-          return item
-        })
+        // let addressStatus = that.data.addressStatus
+        if (e == 0) {
+          art.map(item => {
+            item.checked = false
+            if (item.id == that.data.curId) {
+              item.checked = true
+            }
+            return item
+          })
+        }
         console.log(art)
         that.setData({
-          addressList: art
+          addressList: art,
+          showContainer: true,
+          showBtn: false
         })
+        // setTimeout(function(){
+        //   that.setData({
+        //     showContainer: true,
+        //     showBtn: false
+        //   })
+        // }, 200)
+      } else {
+        that.setData({
+          addressList: [],
+          showContainer: false,
+          showBtn: true,
+        })
+        // setTimeout(function () {
+        //   that.setData({
+        //     showContainer: false,
+        //     showBtn: true,
+        //   })
+        // }, 200)
       }
     }).catch(res => {
-      wx.hideLoading()
+      // wx.hideLoading()
       // pageState.error()// 切换为error状态
       console.log('getAddress-fail:', res);
-    }).finally(() => {
+      }).finally(() => {
+        wx.stopPullDownRefresh()
       // console.log('getAddress-finally:', "结束");
     })
-  },
-  onRetry() {
-    this.onLoad()
   },
   onShow: function () {
     let that = this
     that.setData({
       isFirst: true
     })
-    that.getAddress()
+    console.log(that.data.refresh)
+    if (that.data.refresh) {
+      that.getAddress()
+    }
   },
-  // onPullDownRefresh() {
-  //   this.getAddress()
-  //   wx.stopPullDownRefresh()
-  // },
+  onPullDownRefresh() {
+    this.getAddress()
+  },
   onShareAppMessage: function () {}
 })

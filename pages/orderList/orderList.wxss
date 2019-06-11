@@ -93,6 +93,7 @@ page{
   font-size: 10px;
   color: #888;
   box-sizing: border-box;
+  align-items:center;
 }
 .loading{
   margin: 10px auto;

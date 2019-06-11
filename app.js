@@ -1,58 +1,33 @@
 //app.js
-const api = require('./utils/request.js')
+// const api = require('./utils/request.js')
+const login = require('./utils/wxLogin.js')
+// import { Token } from 'utils/token.js';
 App({
   onLaunch: function () {
-    var that = this
+    // console.log('app onLaunch')
+    // var token = new Token();
+    // token.verify();
+    let that = this
+    login.wxLogin()
     wx.onNetworkStatusChange(res =>{
-      console.log(res.isConnected)
-      console.log(res.networkType)
-    })
-    wx.getNetworkType({
-      success(res) {
-        const networkType = res.networkType
-      }
-    })
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
-    console.log('app onLaunch')
-    // 登录
-    wx.login({
-      success: res => {
-        if (res.code) {
-          let data = { code: res.code }
-          api.wxLogin('/weixin/exchange', 'POST', data).then(res => {
-            wx.hideLoading()
-            // pageState.finish()    // 切换为finish状态
-            console.log('app-success:', res.data);
-            if (res.data.rlt_code == 'S_0000') {
-              that.globalData.token = res.data.data.access_token;
-              that.globalData.open_id = res.data.data.open_id
-              wx.setStorageSync('token', res.data.data.access_token)
-            } else {
-            }
-          }).catch(res => {
-            wx.hideLoading()
-            wx.showToast({
-              title: res,
-              icon: 'none'
-            })
-            // pageState.error()    // 切换为error状态
-            console.log('app-fail:', res);
-          }).finally(() => {
-            // console.log('app-finally:', "结束");
-          })
-        } else {
-          console.log('获取用户登录态失败！' + res)
-        }
+      let isConnected = res.isConnected
+      let networkType = res.networkType
+      console.log(isConnected)
+      console.log(networkType)
+      that.globalData.isConnected = isConnected
+      that.globalData.networkType = networkType
+      if (!isConnected || networkType == 'none') {
+        wx.showToast({
+          title: '网络连接错误',
+          image: '/images/fail.svg'
+        })
       }
     })
     // 获取小程序更新机制兼容
     if (wx.canIUse('getUpdateManager')) {
       const updateManager = wx.getUpdateManager()
       updateManager.onCheckForUpdate(function (res) {
-        console.log(res)
+        // console.log(res)
         // 请求完新版本信息的回调
         if (res.hasUpdate) {
           updateManager.onUpdateReady(function () {
@@ -83,25 +58,16 @@ App({
         content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
       })
     }
-
   },
   onShow(){
-    console.log('APP onShow')
-    wx.checkSession({
-      success(res) {
-        console.log(res)
-        //session_key 未过期，并且在本生命周期一直有效
-      },
-      fail(err) {
-        console.log(err)
-        // session_key 已经失效，需要重新执行登录流程
-        this.onLaunch()
-      }
-    })
+    // console.log('APP onShow')
+    let that = this
+    
   },
+  
   globalData: {
     token: null,
     open_id: null,
     userInfo: null,
-  }
+  },
 })

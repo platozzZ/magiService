@@ -1,68 +1,65 @@
 <wxs module="filters" src="../../utils/addmul.wxs"></wxs>
-<view class="container" wx:if="{{art.address}}">
-  <scroll-view class='scroll' scroll-y>
-    <view class="weui-panel">
-      <view class="weui-panel__bd">
-          <view class="weui-media-box weui-media-box_text">
-            <view class="weui-media-box__title weui-media-box__title_in-text  service">
-              <view>{{art.serviceType}}</view>
-              <view>{{art.orderStatus}} {{art.payStatus}}</view>
-            </view>
-            <view class="weui-media-box__desc service">
-              <view>{{art.service_date}} {{art.service_time}}</view>
-              <view>
-                订单金额：{{filters.toFixs(art.order_favorable_amount - art.deposit_favorable_amount)}}元
-              </view>
-            </view>
-            <view class="weui-media-box__desc amount-tips" wx:if="{{art.deposit_favorable_amount}}">
-              租赁保证金：{{filters.toFixs(art.deposit_favorable_amount)}}元
+<view class="container" wx:if="{{showContainer}}">
+  <view class='scroll'>
+    <view class="weui-panel__bd" style='background: #fff;'>
+        <view class="weui-media-box weui-media-box_text">
+          <view class="weui-media-box__title weui-media-box__title_in-text  service">
+            <view>{{art.serviceType}}</view>
+            <view>{{art.orderStatus}} {{art.payStatus}}</view>
+          </view>
+          <view class="weui-media-box__desc service">
+            <view>{{art.service_date}} {{art.service_time}}</view>
+            <view>
+              订单金额：{{filters.toFixs(art.order_favorable_amount - art.deposit_favorable_amount)}}元
             </view>
           </view>
-          <view class="weui-media-box weui-media-box_text">
-            <view class="weui-media-box__title weui-media-box__title_in-text">服务地址</view>
-            <view class="weui-media-box__desc">
-              {{art.address}}
-            </view>
+          <view class="weui-media-box__desc amount-tips" wx:if="{{art.deposit_favorable_amount}}">
+            租赁保证金：{{filters.toFixs(art.deposit_favorable_amount)}}元
           </view>
-          <!-- <view class="weui-media-box weui-media-box_text" wx:if="{{art.service_type_code == 0}}">
-            <view class="weui-media-box__title weui-media-box__title_in-text">布草清洗方式</view>
-            <view class="weui-media-box__desc">
-              {{art.cleanType}}
-            </view>
-            <view class="weui-media-box__desc">
-              {{art.hl_location}}
-            </view>
-          </view> -->
-          <view class="weui-media-box weui-media-box_text" wx:if="{{art.service_type_code == 1}}">
-            <view class="weui-media-box__title weui-media-box__title_in-text">布草数量</view>
-            <view class="weui-media-box__desc">
-              1.5m：{{art.hl_specs15}} 套
-            </view>
-            <view class="weui-media-box__desc">
-              1.8m：{{art.hl_specs18}} 套
-            </view>
+        </view>
+        <view class="weui-media-box weui-media-box_text">
+          <view class="weui-media-box__title weui-media-box__title_in-text">服务地址</view>
+          <view class="weui-media-box__desc">
+            {{art.address}}
           </view>
-          <view class="weui-media-box weui-media-box_text">
-            <view class="weui-media-box__title weui-media-box__title_in-text">保洁开门方式</view>
-            <view class="weui-media-box__desc">
-              {{art.open_door_remark}}
-            </view>
+        </view>
+        <!-- <view class="weui-media-box weui-media-box_text" wx:if="{{art.service_type_code == 0}}">
+          <view class="weui-media-box__title weui-media-box__title_in-text">布草清洗方式</view>
+          <view class="weui-media-box__desc">
+            {{art.cleanType}}
           </view>
-          <view class="weui-media-box weui-media-box_text">
-            <view class="weui-media-box__title weui-media-box__title_in-text">消耗品位置</view>
-            <view class="weui-media-box__desc">
-              {{art.consumables_location? art.consumables_location : '无'}}
-            </view>
+          <view class="weui-media-box__desc">
+            {{art.hl_location}}
           </view>
-          <view class="weui-media-box weui-media-box_text">
-            <view class="weui-media-box__title weui-media-box__title_in-text">备注</view>
-            <view class="weui-media-box__desc">
-              {{art.remark? art.remark : '无'}}
-            </view>
+        </view> -->
+        <view class="weui-media-box weui-media-box_text" wx:if="{{art.service_type_code == 1}}">
+          <view class="weui-media-box__title weui-media-box__title_in-text">布草数量</view>
+          <view class="weui-media-box__desc">
+            1.5m：{{art.hl_specs15}} 套
           </view>
-      </view>
+          <view class="weui-media-box__desc">
+            1.8m：{{art.hl_specs18}} 套
+          </view>
+        </view>
+        <view class="weui-media-box weui-media-box_text">
+          <view class="weui-media-box__title weui-media-box__title_in-text">保洁开门方式</view>
+          <view class="weui-media-box__desc">
+            {{art.open_door_remark}}
+          </view>
+        </view>
+        <view class="weui-media-box weui-media-box_text">
+          <view class="weui-media-box__title weui-media-box__title_in-text">消耗品位置</view>
+          <view class="weui-media-box__desc">
+            {{art.consumables_location? art.consumables_location : '无'}}
+          </view>
+        </view>
+        <view class="weui-media-box weui-media-box_text">
+          <view class="weui-media-box__title weui-media-box__title_in-text">备注</view>
+          <view class="weui-media-box__desc">
+            {{art.remark? art.remark : '无'}}
+          </view>
+        </view>
     </view>
-  </scroll-view>
+  </view>
   <view class='btn-submit' bindtap='toAgain' hover-class='navigator-hover' wx:if="{{art.order_status == 3}}">再来一单</view>
 </view>
-<view wx:else></view>

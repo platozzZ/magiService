@@ -19,7 +19,7 @@ Page({
       house_id: e
     }
     console.log(data)
-    api.request('/fuwu/house/deposit_detail.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/house/deposit_detail.do', 'POST', data).then(res => {
       console.log('getDetail:', res.data);
       if (res.data.rlt_code == 'S_0000') {
         let data = res.data.data

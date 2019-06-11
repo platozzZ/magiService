@@ -6,7 +6,8 @@ Page({
   data: {
     art: [],
     house_id: '',
-    deposit_detail: []
+    showContainer: false,
+    showBtn: false,
   },
   onLoad: function (options) {
     console.log(options)
@@ -14,21 +15,13 @@ Page({
     that.getDeposit()
   },
   getDeposit() {
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
     let that = this
-    // const pageState = pagestate(that)
-    // pageState.loading()// 切换为loading状态
     let data = {
       current_page: "1", 
       page_size: "100"
     }
-    api.request('/fuwu/house/deposit_list.do', 'POST', app.globalData.token, data).then(res => {
+    api.request('/fuwu/house/deposit_list.do', 'POST', data).then(res => {
       console.log('deposit_list:', res.data);
-      wx.hideLoading()
-      // pageState.finish()// 切换为finish状态
       if (res.data.rlt_code == 'S_0000' && !!res.data.data.rows) {
         let data = res.data.data.rows
         data.map(item => {
@@ -36,11 +29,17 @@ Page({
         })
         that.setData({
           art: data,
+          showContainer: true,
+          showBtn: false
+        })
+      } else {
+        that.setData({
+          art: [],
+          showContainer: false,
+          showBtn: true
         })
       }
     }).catch(res => {
-      wx.hideLoading()
-      // pageState.error()// 切换为error状态
       console.log('deposit_list-fail:', res);
     }).finally(() => {})
   },
@@ -91,17 +90,13 @@ Page({
     })
   },
   reFund(e) {
-    wx.showLoading({
-      title: '',
-      mask: true
-    })
     let that = this
     let data = {
       house_id: e
     }
     console.log(data)
-    api.request('/fuwu/house/deposit_refund.do', 'POST', app.globalData.token, data).then(res => {
-      wx.hideLoading()
+    api.request('/fuwu/house/deposit_refund.do', 'POST', data).then(res => {
+      // wx.hideLoading()
       console.log('deposit_refund:', res.data);
       if (res.data.rlt_code == 'S_0000') {
         wx.showModal({
@@ -115,7 +110,7 @@ Page({
         })
       }
     }).catch(res => {
-      wx.hideLoading()
+      // wx.hideLoading()
       wx.showModal({
         title: '提示',
         content: '退款申请失败，请重新请求',

@@ -61,3 +61,6 @@ page{
   width: 26px;
   height: 26px;
 }
+.weui-panel:last-child{
+  margin-bottom: 10px;
+}

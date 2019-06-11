@@ -1,7 +1,7 @@
-<view class="container">
-  <scroll-view class='scroll' scroll-y >
+<view class="container" wx:if='{{showContainer}}'>
+  <view class='scroll'>
     <view class="weui-panel addressList">
-      <block wx:for="{{addressList}}" wx:key="*this">
+      <block wx:for="{{addressList}}" wx:key="index">
         <!-- <radio-group bindchange="chooseAddress">
           <label class="weui-cell weui-check__label" data-index="{{index}}">
             <radio class="weui-check" value="{{item.address}}" checked="{{item.checked}}"/>
@@ -24,6 +24,10 @@
         </view>
       </block>
     </view>
-  </scroll-view>
-  <navigator class="{{addressList.length > 0 ? 'address-yes' : 'address-no'}}" url='../addaddress/addaddress?addstatus={{addressStatus}}'>添加房源</navigator>
+  </view>
+  <navigator class="address-yes" url='../addaddress/addaddress?addstatus={{addressStatus}}' wx:if='{{addressList.length > 0}}'>添加房源</navigator>
 </view>
+<navigator class="address-no" url='../addaddress/addaddress?addstatus={{addressStatus}}' wx:if='{{showBtn}}'>添加房源</navigator>
+<!-- 
+<view>!!addressList: {{!!addressList}}</view>
+<view>addressList.length > 0: {{addressList.length > 0}}</view> -->
