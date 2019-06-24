@@ -14,6 +14,7 @@ Page({
   },
   onLoad: function (options) {
     console.log(options)
+    console.log(0 == '0')
     let that = this
     that.initValidate()
     that.setData({
@@ -22,6 +23,7 @@ Page({
   },
   houseTypeChange(e){
     let that = this
+      console.log(e.detail.value)
     that.setData({
       checkedHouseType: e.detail.value,
     })

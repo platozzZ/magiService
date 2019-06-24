@@ -36,7 +36,7 @@
         <radio-group bindchange="houseTypeChange" name="house_type_code">
           <block wx:for="{{housetypeArr}}" wx:key="*this">  
             <label class="croot-btn {{checkedHouseType == item.value ?'active':''}}">
-              <radio value="{{item.value}}" />{{item.text}}
+              <radio value="{{item.value}}" checked="{{checkedHouseType == item.value}}" />{{item.text}}
             </label>
           </block>
         </radio-group> 
