@@ -1,0 +1,66 @@
+page{
+  display:flex;
+  display:-webkit-box;
+  display:-webkit-flex;
+  height:100%;
+  width:100%;
+}
+.address-no{
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  text-align: center;
+  border: 1rpx solid #999;
+  border-radius: 20px;
+}
+.address-yes{
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background: #014099;
+  color: #fff;
+}
+.addressList .weui-media-box__desc{
+  color: #353535;
+}
+.addressList .weui-media-box__info{
+  color: #353535;
+  padding: 0;
+  margin-top: 10px;
+}
+.addressList .weui-media-box_text.active .weui-media-box__desc,.addressList .weui-media-box_text.active .weui-media-box__info{
+  color: #014099;
+  font-size: 14px;
+}
+.weui-media-box.weui-media-box_text{
+  padding: 15px 15px 15px 45px;
+}
+.weui-media-box.weui-media-box_text.status{
+  padding: 15px 45px 15px 15px;
+}
+.radio{
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  margin-top: -11px;
+  width: 22px;
+  height: 22px;
+}
+.delete{
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  margin-top: -13px;
+  width: 26px;
+  height: 26px;
+}
+.weui-panel:last-child{
+  margin-bottom: 10px;
+}
