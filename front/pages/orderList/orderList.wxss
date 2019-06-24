@@ -1,0 +1,122 @@
+page{
+  display:flex;
+  display:-webkit-flex;
+  height:100%;
+  width:100%;
+}
+.weui-form-preview__label,.weui-form-preview__value_in-hd{
+  font-size: 14px;
+}
+.weui-form-preview__label{
+  color: #353535;
+}
+.address{
+  width: calc(100% - 75px);
+  text-align: left;
+  text-align-last:left;
+}
+.weui-form-preview__value_in-hd{
+  color: #8a8a8a;
+  font-size: 13px;
+  text-align: right;
+}
+
+.weui-form-preview__hd .weui-form-preview__item{
+  line-height: 46rpx;
+}
+.weui-form-preview__ft{
+  text-align: right;
+  display: block;
+  padding: 10px 15px;
+  line-height: 20px;
+  overflow: hidden;
+}
+.weui-form-preview{
+  margin-bottom: 10px;
+}
+/* .weui-form-preview.weui-cell_active {
+  background-color:#ececec;
+} */
+.weui-form-preview__bd{
+  position: relative;
+  padding: 10px 15px;
+}
+.weui-form-preview__ft::after{
+  left: 15px;
+}
+.weui-form-preview:after,.weui-form-preview:before{
+  border: 0;
+}
+.weui-form-preview:first-child::before{
+  border-top:10px solid #f2f3f5;
+}
+.weui-form-preview:first-child .weui-form-preview__hd{
+  padding-top: 20px;
+}
+.amount{
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 16px;
+  color: #ff4444;
+}
+.btn{
+  /* float: right; */
+  border: 1rpx solid #014099;
+  color: #014099;
+  border-radius: 3px;
+  line-height: 22px;
+  text-align: center;
+  width: 60px;
+  font-size: 12px;
+  margin-left: 10px;
+}
+.btn.payNo{
+  color: #888;
+  border-color: #888;
+}
+.pay-container{
+  display:flex;
+  display:-webkit-flex;
+}
+.cancelled{
+  font-size: 12px;
+  color: #888;
+  margin-left: 10px;
+}
+.btn-container{
+  display: flex;
+  display:-webkit-box;
+  display:-webkit-flex;
+  justify-content: space-between; /* 项目位于各行之间留有空白的容器内。 */
+  width: 100%;
+  font-size: 10px;
+  color: #888;
+  box-sizing: border-box;
+  align-items:center;
+}
+.loading{
+  margin: 10px auto;
+  line-height: 20px;
+  height: 20px;
+}
+
+.orderList-no{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+  
+}
+.order-none{
+  width: 120px;
+  height: 120px;
+}
+.orderList-no view{
+  color: #888;
+  line-height: 40px;
+  font-size: 14px;
+}

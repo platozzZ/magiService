@@ -1,0 +1,26 @@
+<view class="weui-cells">
+  <navigator url="../address/address?status=1" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <!-- <view class="weui-cell__hd">
+          <image src="../../images/m-house.png"></image>
+      </view> -->
+      <view class="weui-cell__bd">房源管理</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+  </navigator>
+  <navigator url="../deposit/deposit" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <!-- <view class="weui-cell__hd">
+          <image src="../../images/m-amount.png"></image>
+      </view> -->
+      <view class="weui-cell__bd">租赁保证金管理</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+  </navigator>
+</view>
+<view class="weui-cells">
+  <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap='openActionSheet' data-phone='{{mobile}}'>
+      <!-- <view class="weui-cell__hd">
+          <image src="../../images/m-contact.png"></image>
+      </view> -->
+      <view class="weui-cell__bd">联系客服</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+  </view>
+</view>
+<!-- <button class="weui-btn callMe">联系客服</button> -->

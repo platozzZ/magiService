@@ -1,0 +1,199 @@
+<wxs module="filters" src="../../utils/addmul.wxs"></wxs>
+<form bindsubmit="formSubmit" bindreset="formReset" report-submit="true">  
+<view class="container">
+  <scroll-view class='scroll' scroll-y >
+    <view class="weui-cells weui-cells_after-title service-top">
+      <navigator url="../address/address?status=0&house_id={{formData.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd" wx:if="{{!formData}}">
+          <view class="weui-label">房源地址</view>
+        </view>
+        <view class="weui-cell__bd">
+          <!-- <input class="weui-input" name="address" value='{{form.address}}' hidden /> -->
+          <view class='address'>{{formData.address}}</view>
+          <view class='address address-name'>{{formData.contact_name}} {{formData.contact_mobile}}</view>
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </navigator>
+
+      <view class='border-address' style=''>
+        <!-- <image src='../../images/splitters.png' mode='aspectFill'></image>
+        <image src='../../images/splitters.png' mode='aspectFill'></image> -->
+      </view>
+      <view class="weui-cell weui-cell_access border-none" bindtap='toggleDialog' data-time='{{form.service_time}}'>
+        <view class="weui-cell__hd" wx:if="{{!form.service_time}}">
+          <view class="weui-label">服务时间</view>
+        </view>
+        <view class="weui-cell__bd">
+          {{form.service_date}} {{form.service_time}}
+          <input class="weui-input" name="service_date" value='{{form.service_date}}' hidden />
+          <input class="weui-input" name="service_time" value='{{form.service_time}}' hidden />
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </view>
+    </view>
+
+    <view class="weui-panel weui-panel_access">
+        <view class="weui-panel__bd">
+            <view class="weui-media-box weui-media-box_text">
+                <view class="weui-media-box__title weui-media-box__title_in-text">选择服务类型</view>
+                <view class="weui-media-box__desc">
+                  <radio-group bindchange="serviceTypeChange" name="service_type_code">
+                    <block wx:for="{{serviceTypeArr}}" wx:key="*this">  
+                      <label class="croot-btn {{checkedServiceType == item.value ?'active':''}}">
+                        <radio value="{{item.value}}" checked='{{checkedServiceType == item.value}}' />{{item.text}}
+                      </label>
+                    </block>
+                  </radio-group> 
+                </view>
+                <!-- <view class="typeContainer" wx:if="{{checkedServiceType == '0'}}">
+                  <view class='typeTitle'>布草清洗方式</view>
+                  <radio-group bindchange="cleanChange" name="hl_clean_type_code">
+                    <label class='clean-label'>
+                      <radio value="0" checked="{{form.hl_clean_type_code == '0'}}" />
+                      <icon type="success" size="14" color='#014099' wx:if="{{form.hl_clean_type_code == '0'}}"></icon>
+                      <icon type="circle" size="14" wx:else></icon>
+                      房间内洗晾
+                    </label>
+                    <label class='clean-label'>
+                      <radio value="1" checked="{{form.hl_clean_type_code == '1'}}" />
+                      <view style='width: 100%;'><icon type="success" size="14" color='#014099' wx:if="{{form.hl_clean_type_code == '1'}}"></icon>
+                      <icon type="circle" size="14" wx:else></icon>
+                      领取更换</view>
+                      <view style='width: 100%;'><input class="weui-input" name="hl_location" value='{{form.hl_location}}' placeholder='请填写布草领取地址'  /></view>
+                    </label>
+                  </radio-group> 
+                </view> -->
+                <view class="typeContainer" wx:if="{{checkedServiceType == '1'}}">
+                  <view class='typeTitle'>布草数量<view>* 已对双井、四惠、百子湾、三里屯地区开放</view></view>
+                  <view class='stepperContainer stepList' wx:for="{{setpList}}" wx:key="{{item.steplength}}">
+                    <view>{{item.steplength}}</view>
+                    <view class='stepper'>
+                      <view class='stepper-minus {{item.disabled}}' data-index="{{index}}" bindtap='onMinus' hover-class="weui-cell_active">-</view>
+                      <view class='stepper-input'>{{item.steppernum}}</view>
+                      <view class='stepper-plus' data-index="{{index}}" bindtap='onPlus' hover-class="weui-cell_active">+</view>
+                    </view>
+                    <input name='{{item.name}}' value='{{item.steppernum}}' hidden />
+                  </view>
+                </view>
+            </view>
+            <view class="weui-media-box weui-media-box_text">
+                <view class="weui-media-box__title weui-media-box__title_in-text">保洁开门方式</view>
+                <view class="weui-media-box__desc">
+                  <input class="weui-input" name="open_door_remark" value = '{{form.open_door_remark}}' placeholder='开门密码或钥匙存放位置'  />
+                </view>
+            </view>
+            <view class="weui-media-box weui-media-box_text">
+                <view class="weui-media-box__title weui-media-box__title_in-text">消耗品位置</view>
+                <view class="weui-media-box__desc">
+                  <input class="weui-input" name="consumables_location" value='{{form.consumables_location}}' placeholder='消耗品位置'  />
+                </view>
+            </view>
+            <view class="weui-media-box weui-media-box_text">
+                <view class="weui-media-box__title weui-media-box__title_in-text">备注</view>
+                <view class="weui-media-box__desc">
+                  <view class="weui-cell__bd remark">
+                    <textarea wx:if='{{!multiShow}}' class="weui-textarea" placeholder="还有什么需要跟阿姨特别嘱咐的？" value='{{form.remark}}' maxlength='200' auto-height="true" bindinput='textareaChange' bindblur="ifshowArea" data-show="yes" focus="true" />
+                    <view wx:if="{{multiShow}}" class="weui-textarea weui-textarea-view" style='color:{{areatext=="还有什么需要跟阿姨特别嘱咐的？"?"#888":"#353535"}};height:{{textareaHeight}}px;' data-show="no" bindtap="ifshowArea">{{areatext}}</view>
+                    <view class="weui-textarea-counter">{{textCount}}/200</view>
+                  </view>
+                </view>
+                <view class='checkBox' hidden='true'>
+                  <radio-group bindchange="checkboxChange" name="sla">
+                    <label class="weui-cell weui-check__label">
+                      <view class="weui-cell__hd weui-check__hd_in-checkbox">
+                          <image src='../../images/check.png' class="checkImage {{checkboxChecked? 'checked' : ''}}"></image>
+                      </view>
+                      <radio value="0" checked='{{checkboxChecked}}' />
+                      <view class="weui-cell__bd">已阅读并同意<view class='inline' bindtap='toSla'>《麦极服务协议》</view></view>
+                    </label>
+                  </radio-group> 
+                  <!-- <checkbox-group bindchange="checkboxChange" name='check'>
+                    <label class="weui-cell weui-check__label">
+                        <checkbox class="weui-check" value="0" checked="{{!checkboxChecked}}" />
+                        <view class="weui-cell__hd weui-check__hd_in-checkbox">
+                          <image src='../../images/check.png' class="checkImage {{checkboxChecked? 'checked' : ''}}"></image>
+                        </view>
+                        <view class="weui-cell__bd">已阅读并同意<navigator>《麦极服务协议》</navigator></view>
+                        
+                    </label>
+                  </checkbox-group> -->
+                </view>
+            </view>
+        </view>
+    </view>
+    <view hidden='true'>
+      <input name="remark" value='{{form.remark}}'></input>
+      <input class="weui-input" name="house_id" value='{{formData.id}}' ></input>
+      <input class="weui-input" name="mobile" value='{{formData.contact_mobile}}' ></input>
+    </view>
+  </scroll-view>
+  <view class='bot-container'>
+    <view class='btn-left' wx:if="{{!formData.address || !checkedServiceType}}">
+      <text class='tipsPrice'>请选择{{!formData.address?'房源地址':''}}{{!formData.address&&!checkedServiceType?'和':''}}{{!checkedServiceType?'服务类型':''}}</text>
+    </view>
+    <view class='btn-left' wx:else bindtap='toggleArrow'>
+      <input name="amount" value='{{amount.order_favorable_amount}}' hidden='true' />
+      <text class='price'>￥{{filters.toFixs(amount.order_favorable_amount)}}</text>
+      <text class='originalPrice' hidden='{{originalPriceShow}}'>￥{{filters.toFixs(amount.order_retail_amount)}}</text>
+      <text class='tipsPrice'>(体验价)</text>
+      <view class="pay-arrow {{showArrow?'active':''}}"></view>
+    </view>
+    <button class="btn-pay {{toPayFirst?'':'disabled'}}" formType="{{toPayFirst?'submit':''}}" wx:if="{{showPrice}}" >去支付</button>
+    <!--  disabled="{{toPayFirst}}" -->
+    <button class='btn-pay disabled' wx:else>去支付</button>
+  </view>
+</view>
+</form>
+
+<view class="amount-dialog {{ showAmountDialog ? 'amountShow' : '' }}" bindtap="toggleArrow">
+  <view class='amount-dialog-container'>
+    <view class='amount-dialog-title'>费用明细</view>
+    <view class='amount-dialog-text'><text>{{checkedServiceType == 0? '田螺姑娘': '甩手掌柜'}}</text><text>{{filters.toFixs(amount.order_retail_amount - amount.deposit_favorable_amount)}}元</text></view>
+    <!-- <view class='amount-dialog-text'><text>甩手掌柜</text><text>{{amount.hlFavorableAmount}}元</text></view> -->
+    <view class='amount-dialog-text' hidden='{{amount.deposit_favorable_amount == 0}}' wx:if="{{checkedServiceType == 1}}"><text>租赁保证金</text><text>{{filters.toFixs(amount.deposit_favorable_amount)}}元</text></view>
+    <view class='amount-dialog-text' style='color: #ff4444;'><text>种子用户专享优惠</text><text>{{filters.toFixs(amount.order_favorable_amount - amount.order_retail_amount)}}元</text></view>
+    <view class='amount-dialog-tips' wx:if="{{checkedServiceType == 1}}">
+      <view>*使用甩手掌柜需根据布草数量缴纳租赁保证金</view>
+      <view>*可随时申请退还租赁保证金</view>
+    </view>
+  </view>
+</view>
+<view class="zan-dialog {{ showDialog ? 'zan-dialog--show' : '' }}">
+  <view class="zan-dialog__mask" bindtap="toggleDialog" />
+  <view class="zan-dialog__container" wx:if="{{showDialogData}}">
+    <!-- <form bindsubmit="confirmChoose"> -->
+      <scroll-view scroll-x='true' class='date-scroll' style="width: 100%;">
+        <!-- <radio-group bindchange="dateChange" class="date-radio-group" name="date">
+          <label class="weui-cell weui-check__label" wx:for="{{dialogData}}" wx:key="{{item.date}}" data-id = "{{item.date}}">
+            <radio class="weui-check" value="{{item.date}}" checked="{{curDate == item.date }}"/>
+            <view class="date-item {{curDate == item.date?'active':''}}">
+              <view class='date-name'>{{item.date_week}}</view>
+              <view class='date-date'>{{item.date_id}}</view>
+            </view>
+          </label>
+        </radio-group> -->
+        <view class="date-item {{curDate == item.date?'active':''}}" wx:for="{{dialogData}}" wx:key="*this" bindtap='dateChange' data-id = "{{item.date}}">
+          <view class='date-name'>{{item.date_week}}</view>
+          <view class='date-date'>{{item.date_id}}</view>
+        </view>
+        <!-- <input value='{{form.service_date}}' name='date' hidden=''></input> -->
+      </scroll-view>
+      <view class='date-container' wx:for="{{dialogData}}" wx:key='{{item.date}}' wx:if="{{item.date == curDate}}">
+        <view class="date-times">
+          <view class="date-time {{item.is_full?'disabled':''}} {{curTime == item.time? 'active':'' }}" wx:for="{{item.alive_time}}" wx:key="{{item.time}}" data-time='{{item.time}}' data-date='{{curDate}}' bindtap="{{item.is_full? '': 'timeChoose'}}">
+            <view>{{item.time}}</view>
+          </view>
+        </view>
+        <view class='date-tips'>*12:00~14:00为高峰时间段，建议您错峰预约</view>
+        <view class='date-btn' bindtap='confirmChoose' data-date="{{curDate}}" data-time="{{curTime}}">确定选择</view>
+        <!-- <button class='date-btn' form-type="submit">确定选择</button> -->
+      </view>
+    <!-- </form> -->
+  </view>
+  <view class="zan-dialog__container" wx:else>
+    <view class='weui-loading loadingDialog dialogNone' wx:if="{{showDialogLoading}}">
+      <!-- <image src='../../images/loading.png'></image> -->
+    </view>
+    <view class='refreshDialog dialogNone' bindtap='refreshDialog' hover-class='weui-cell_active' wx:else>点击刷新</view>
+  </view>
+</view>
